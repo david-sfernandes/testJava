@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { colors, fonts, spacing } from "../styles/base";
@@ -6,26 +6,50 @@ import BackgroundImage from "../components/BackgroundGradient";
 import { useNavigation } from "@react-navigation/native";
 import Rating from "../components/Rating";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function BookScreen() {
+type Props = NativeStackScreenProps<RootStackParamList, "Book">;
+
+export default function BookScreen({ route }: Props) {
   const img = require("../assets/hobbit.jpg");
-  const navigation = useNavigation();
+  const [bookdetails, setBookdetails] = useState<BookDetails>();
+
+  const { book } = route.params;
+  console.log(book.key);
+
+  // fetch book details on mount
+  useEffect(() => {
+    fetch(
+      `https://openlibrary.org${book.key}.json`
+    )
+      .then((res) => res.json())
+      .then((res: BookDetails) => {
+        setBookdetails(res);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <SafeAreaView style={styles.screen}>
-      <BackgroundImage img={img} />
+      <BackgroundImage
+        img={{
+          uri: `https://covers.openlibrary.org/b/olid/${book.cover_edition_key}-M.jpg`,
+        }}
+      />
       <ScrollView>
         <View style={styles.main}>
-          <View style={{
-            display: "flex",
-            flexDirection: "row"
-          }}>
-            <View style={{flex: 1}}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <View style={{ flex: 1 }}>
               <Text variant="headlineLarge" style={fonts.h1}>
-                Hobbit
+                {book.title}
               </Text>
               <Text variant="headlineSmall" style={fonts.h4}>
-                J. R. R. Tolkien
+                {book.author_name[0]}
               </Text>
               <Rating />
             </View>
@@ -71,67 +95,9 @@ export default function BookScreen() {
         <View style={styles.descriptionContainer}>
           <Text style={fonts.h3}>Descrição</Text>
           <Text style={fonts.default}>
-            Debool zaroo yib fergoob bum discufa badeesh flooz grauw wona nono
-            apper zerpa. Woohoo wut dowl fleebs zorknu grobe krem squib grobel
-            maboo snanna gork yibsy aut. Ne kweb oosh renato dwam flooz hopple
-            bloo yib fro nooboo. Zaebeltooty euranka caba choba gork noop aut
-            nib neib garsha chibna maboo wut fro. Neeba abanoop kowlenin swaybul
-            whippna hooba myshuno.
+            {bookdetails?.description?.value || "Descrição não está disponível"}
           </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
-          <Text style={fonts.default}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat,
-            repellat? Nesciunt earum autem voluptatum accusantium. Corrupti
-            reiciendis, soluta esse, velit minima id suscipit mollitia omnis
-            veniam in sit inventore animi!
-          </Text>
+          
         </View>
       </ScrollView>
     </SafeAreaView>

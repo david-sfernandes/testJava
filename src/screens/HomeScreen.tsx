@@ -13,7 +13,7 @@ export default function HomeScreen() {
   const [books, setBooks] = useState<BookProps[]>([]);
 
   useEffect(() => {
-    fetch("https://openlibrary.org/trending.json?limit=1")
+    fetch("https://openlibrary.org/trending.json?limit=6")
       .then((res) => res.json())
       .then((res: BooksResponse) => setBooks(res.works))
       .catch((err) => console.error(err));

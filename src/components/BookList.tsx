@@ -6,7 +6,7 @@ export default function BookList({ books }: { books: BookProps[] }) {
   return (
     <View style={styles.bookList}>
       {books.map((book, i) => (
-        <Book cover={book.cover_edition_key} key={`${book.cover_edition_key}${i}`} />
+        <Book book={book} key={`${book.cover_edition_key}${i}`} />
       ))}
     </View>
   );

@@ -8,7 +8,7 @@ import { Button } from "react-native-paper";
 export default function PictureFormScreen() {
   const [image, setImage] = useState<string>("");
   const navigation = useNavigation();
-  //log image
+  
   console.log(image);
 
   const takePicture = () => {
