@@ -7,7 +7,7 @@
     "arch": "react-native run-android --active-arch-only",
     "ios": "react-native run-ios",
     "lint": "eslint .",
-    "start": "react-native start --config ./config",
+    "start": "react-native start",
     "test": "jest"
   },
   "dependencies": {
@@ -34,5 +34,6 @@
   },
   "engines": {
     "node": ">=16"
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }
