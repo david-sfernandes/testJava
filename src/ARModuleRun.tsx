@@ -1,3 +1,4 @@
+import React from "react";
 import { NativeModules, SafeAreaView } from "react-native";
 
 export default function ARMuduleRun() {
