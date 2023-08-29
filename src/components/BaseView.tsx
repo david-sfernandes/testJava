@@ -5,6 +5,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  View,
 } from "react-native";
 import { colors, dimensions, fonts, spacing } from "../styles/base";
 import BackgroundImage from "./BackgroundGradient";
@@ -28,6 +29,7 @@ export default function BaseView({
       <StatusBar animated={true} backgroundColor="#ffffff00" translucent />
       <ScrollView>
         <BackgroundImage img={img} />
+        <View style={styles.statusBarSpacer} />
         {activeHeader ? <Header /> : null}
         {children}
       </ScrollView>
@@ -38,10 +40,12 @@ export default function BaseView({
 
 const styles = StyleSheet.create({
   screen: {
-    height: dimensions.fullHeight + 2 * (StatusBar.currentHeight || 0),
-    // height: "100%",
     position: "relative",
     backgroundColor: colors.black,
-    marginTop: StatusBar.currentHeight ? -StatusBar.currentHeight : 0,
+    height: dimensions.fullHeight + 2 * (StatusBar.currentHeight || 0),
+    marginTop: StatusBar.currentHeight ? -1*StatusBar.currentHeight : 0,
+  },
+  statusBarSpacer: {
+    paddingBottom: 2 * (StatusBar.currentHeight || 0)
   },
 });
