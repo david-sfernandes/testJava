@@ -11,13 +11,10 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 type Props = NativeStackScreenProps<RootStackParamList, "Book">;
 
 export default function BookScreen({ route }: Props) {
-  const img = require("../assets/hobbit.jpg");
+  const navigation = useNavigation();
   const [bookdetails, setBookdetails] = useState<BookDetails>();
-
   const { book } = route.params;
-  console.log(book.key);
 
-  // fetch book details on mount
   useEffect(() => {
     fetch(
       `https://openlibrary.org${book.key}.json`
@@ -64,9 +61,9 @@ export default function BookScreen({ route }: Props) {
           >
             <Button
               // @ts-ignore: suppress param type
-              onPress={() => navigation.navigate("PictureFrom")}
+              onPress={() => navigation.navigate("Annotations")}
               mode="contained"
-              icon="plus"
+              icon="sticker-text"
               textColor="white"
               style={{
                 backgroundColor: "transparent",
@@ -75,7 +72,7 @@ export default function BookScreen({ route }: Props) {
                 flex: 1,
               }}
             >
-              Adicionar
+              Anotações
             </Button>
             <Button
               // @ts-ignore: suppress param type

@@ -1,7 +1,7 @@
 import React from "react";
 import { ImageBackground, StyleSheet } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import { colors } from "../styles/base";
+import { colors, dimensions } from "../styles/base";
 
 export default function BackgroundGradient({ img }: { img: any }) {
   return (
@@ -19,7 +19,7 @@ export default function BackgroundGradient({ img }: { img: any }) {
 const styles = StyleSheet.create({
   bgImage: {
     flex: 1,
-    height: "70%",
+    height: dimensions.fullHeight * 0.8,
     width: "100%",
     position: "absolute",
   },

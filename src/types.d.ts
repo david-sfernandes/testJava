@@ -1,9 +1,9 @@
 type NavItemProps = { icon: string; text: string };
 
 type BookProps = {
-  id: string;
+  id?: string;
   title: string;
-  cover_edition_key: string;
+  cover_edition_key?: string;
   author_name: string[];
   key: string;
 };
@@ -18,7 +18,7 @@ type RootStackParamList = {
   Home: undefined;
   Book: {book: BookProps};
   AR: undefined;
-  PictureFrom: undefined;
+  PictureForm: undefined;
 };
 
 type Author = {
