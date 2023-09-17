@@ -4,6 +4,18 @@ import BottomSheet from "../components/BottomSheet";
 import { colors } from "../styles/base";
 import PrimaryBtn from "./PrimaryBtn";
 import SecondaryBtn from "./SecondaryBtn";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import Notification from "./Notification";
+
+const options = {
+  title: "Selecione uma foto",
+  type: "image",
+  options: {
+    seletionLimit: 1,
+    mediaType: "photo",
+    includeBase64: false,
+  },
+};
 
 export default function ImgForm({ isOpen, setOpen }) {
   const MAX_CHARS = 240;
@@ -11,6 +23,17 @@ export default function ImgForm({ isOpen, setOpen }) {
   const [textLength, setTextLength] = useState(0);
   const [onFocus, setOnFocus] = useState(false);
   const [isTextValid, setIsTextValid] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [res, setRes] = useState<string>("");
+  const [showError, setShowError] = useState(false);
+
+  const [showNotification, setShowNotification] = useState(true);
+
+  const [image, setImage] = useState<{
+    uri: string;
+    type: string;
+    fileName: string;
+  }>();
 
   const onFocusStyle = { borderColor: onFocus ? colors.gray : "#ffffff80" };
   const onTextLengthStyle = { color: isTextValid ? colors.gray : colors.red };
@@ -21,21 +44,72 @@ export default function ImgForm({ isOpen, setOpen }) {
     setIsTextValid(text.trim().length <= MAX_CHARS);
   };
 
+  const takePicture = () => {
+    launchCamera({ mediaType: "photo" }, (res) => {
+      setImage((res as CustomImgResponse).assets[0]);
+    });
+  };
+
+  const openGallery = () => {
+    launchImageLibrary(options, (res) => {
+      setImage((res as CustomImgResponse).assets[0]);
+    });
+  };
+
+  const sendData = async () => {
+    if (image) {
+      const data = new FormData();
+
+      // @ts-ignore: suppress param type
+      data.append("file", {
+        uri: image.uri,
+        type: image.type,
+        name: image.fileName,
+      });
+      setLoading(true);
+
+      fetch("https://areader-ai-api-zkmzgms3ea-rj.a.run.app", {
+        method: "post",
+        body: data,
+        headers: {
+          "Content-Type": "multipart/form-data;",
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("Res: ", res);
+          setRes(res.message);
+          setLoading(false);
+
+          setShowNotification(true);
+          setOpen(false);
+        })
+        .catch((err) => {
+          console.log("Err: ", err);
+          setLoading(false);
+          setShowError(true);
+        });
+    }
+  };
+
   return (
     <BottomSheet isOpen={isOpen} setOpen={setOpen}>
       <View style={styles.flexContainer}>
-        <Image
-          source={{
-            uri: "https://i.pinimg.com/originals/85/6e/54/856e5449740df77753d058ea284fc024.jpg",
-          }}
-          style={styles.smallImg}
-        />
+        {image?.uri && (
+          <Image source={{ uri: image.uri }} style={styles.smallImg} />
+        )}
         <View style={styles.btnContainer}>
-          <PrimaryBtn onPress={() => {}} text="Tirar foto" icon="camera" />
+          <PrimaryBtn
+            onPress={takePicture}
+            text="Tirar foto"
+            icon="camera"
+            disabled={loading}
+          />
           <SecondaryBtn
-            onPress={() => {}}
+            onPress={openGallery}
             text="Abrir galeria"
             icon="image-outline"
+            disabled={loading}
           />
         </View>
       </View>
@@ -57,7 +131,28 @@ export default function ImgForm({ isOpen, setOpen }) {
           {textLength}/{MAX_CHARS}
         </Text>
       </View>
-      <PrimaryBtn onPress={() => {}} text="Salvar" />
+      <PrimaryBtn
+        onPress={() => sendData()}
+        text={loading ? "Enviando..." : "Salvar"}
+        disabled={loading || !isTextValid || !image}
+      />
+
+      <Notification
+        visible={showNotification}
+        setVisible={setShowNotification}
+        icon={res == "valid" ? "check" : "exclamation-triangle"}
+        text={
+          res == "valid"
+            ? "Sua anotação foi salva"
+            : "Imagem invalida. Tente usar outra!"
+        }
+      />
+      <Notification
+        visible={showError}
+        setVisible={setShowError}
+        icon="times"
+        text="Erro ao enviar sua anotação. Tente novamente!"
+      />
     </BottomSheet>
   );
 }
@@ -85,6 +180,8 @@ const styles = StyleSheet.create({
   textInputContainer: {
     width: "100%",
     position: "relative",
+    marginBottom: 5,
+    marginTop: 8,
   },
   input: {
     height: 65,

@@ -1,6 +1,10 @@
 type NavItemProps = { icon: string; text: string };
 
-type BtnProps = { text: string; onPress: () => void; icon?: string };
+type BtnProps = { text: string; onPress: () => void; icon?: string, disabled?: boolean };
+
+type CustomImgResponse = {
+  assets: { uri: string, type: string, fileName: string }[];
+};
 
 type BookProps = {
   id?: string;
