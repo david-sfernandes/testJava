@@ -14,13 +14,14 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { HEIGHT, OVERDRAG } from "../misc/consts";
+import { colors } from "../styles/base";
 import Rating from "./Rating";
 
+const HEIGHT = 260;
+const OVERDRAG = -20;
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export default function Modal({ isOpen, setOpen }) {
-  console.log("open")
+export default function BottomSheet({ isOpen, setOpen, children }) {
   const offset = useSharedValue(0);
   const toggleSheet = () => {
     setOpen(!isOpen);
@@ -31,7 +32,7 @@ export default function Modal({ isOpen, setOpen }) {
     .onChange((event) => {
       const offsetDelta = event.changeY + offset.value;
 
-      const clamp = Math.max(-OVERDRAG, offsetDelta);
+      const clamp = Math.max(OVERDRAG, offsetDelta);
       offset.value = offsetDelta > 0 ? offsetDelta : withSpring(clamp);
     })
     .onFinalize(() => {
@@ -62,7 +63,7 @@ export default function Modal({ isOpen, setOpen }) {
           entering={SlideInDown.springify().damping(15)}
           exiting={SlideOutDown}
         >
-          <Rating />
+          {children}
         </Animated.View>
       </GestureDetector>
     </>
@@ -70,24 +71,21 @@ export default function Modal({ isOpen, setOpen }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000000aa",
-  },
   sheet: {
-    backgroundColor: "white",
+    zIndex: 1,
     padding: 16,
-    height: HEIGHT,
     width: "100%",
     position: "absolute",
-    bottom: -OVERDRAG * 1.1,
-    borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    zIndex: 1,
+    borderTopRightRadius: 20,
+    backgroundColor: colors.darkGray,
+
+    height: HEIGHT,
+    bottom: OVERDRAG * 1.1,
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "black",
+    backgroundColor: "#00000088",
     zIndex: 1,
   },
 });

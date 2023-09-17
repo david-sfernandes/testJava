@@ -4,7 +4,8 @@ import BaseView from "../components/BaseView";
 import { colors, fonts, spacing } from "../styles/base";
 import NoteCard from "../components/NoteCard";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import Modal from "../components/Modal";
+import BottomSheet from "../components/BottomSheet";
+import ImgForm from "../components/ImgForm";
 
 const AddNote = ({onClick}: {onClick: () => void}) => {
   return (
@@ -57,7 +58,7 @@ export default function AnnotationsScreen() {
         </View>
       </BaseView>
       <AddNote onClick={toggleModal}/>
-      {isOpen && <Modal isOpen={isOpen} setOpen={setIsOpen}/>}
+      {isOpen && <ImgForm isOpen={isOpen} setOpen={setIsOpen}/>}
     </>
   );
 }

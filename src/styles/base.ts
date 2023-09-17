@@ -7,6 +7,7 @@ export const dimensions = {
 
 export const colors = {
   gray: "#e5e5e5",
+  darkGray: "#2a2a2a",
   black: "#141414",
   red: "#ec3912",
   yellow: "#ffc700",
