@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import BaseView from "../components/BaseView";
-import { colors, fonts, spacing } from "../styles/base";
-import NoteCard from "../components/NoteCard";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import BottomSheet from "../components/BottomSheet";
+import BaseView from "../components/BaseView";
 import ImgForm from "../components/ImgForm";
+import NoteCard from "../components/NoteCard";
+import { colors, fonts, spacing } from "../styles/base";
 
-const AddNote = ({onClick}: {onClick: () => void}) => {
+const AddNote = ({ onClick }: { onClick: () => void }) => {
   return (
     <View style={{ backgroundColor: "black" }}>
       <Pressable style={styles.addNote} onPress={() => onClick()}>
@@ -57,8 +56,8 @@ export default function AnnotationsScreen() {
           ))}
         </View>
       </BaseView>
-      <AddNote onClick={toggleModal}/>
-      {isOpen && <ImgForm isOpen={isOpen} setOpen={setIsOpen}/>}
+      <AddNote onClick={toggleModal} />
+      {isOpen && <ImgForm isOpen={isOpen} setOpen={setIsOpen} />}
     </>
   );
 }

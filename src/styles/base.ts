@@ -11,7 +11,7 @@ export const colors = {
   black: "#141414",
   red: "#ec3912",
   yellow: "#ffc700",
-  semiTransparent: "#ffffff20",
+  semiTransparent: "#ffffff50",
   transparent: "#00000000",
 };
 

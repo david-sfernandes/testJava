@@ -1,5 +1,7 @@
 type NavItemProps = { icon: string; text: string };
 
+type BtnProps = { text: string; onPress: () => void; icon?: string };
+
 type BookProps = {
   id?: string;
   title: string;
@@ -16,7 +18,7 @@ type BooksResponse = {
 
 type RootStackParamList = {
   Home: undefined;
-  Book: {book: BookProps};
+  Book: { book: BookProps };
   AR: undefined;
   PictureForm: undefined;
 };
@@ -31,7 +33,7 @@ type BookDetails = {
   key: string;
   authors: Author[];
   type: { key: string };
-  description: { value: string, type: string };
+  description: { value: string; type: string };
   covers: number[];
   subject_places: string[];
   subjects: string[];

@@ -14,10 +14,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { colors } from "../styles/base";
-import Rating from "./Rating";
+import { colors, spacing } from "../styles/base";
 
-const HEIGHT = 260;
+const HEIGHT = 300;
 const OVERDRAG = -20;
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -73,7 +72,8 @@ export default function BottomSheet({ isOpen, setOpen, children }) {
 const styles = StyleSheet.create({
   sheet: {
     zIndex: 1,
-    padding: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
     width: "100%",
     position: "absolute",
     borderTopLeftRadius: 20,
