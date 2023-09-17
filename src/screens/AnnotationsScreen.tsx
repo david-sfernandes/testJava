@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import BaseView from "../components/BaseView";
 import { colors, fonts, spacing } from "../styles/base";
 import NoteCard from "../components/NoteCard";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import Modal from "../components/Modal";
 
-const AddNote = () => {
+const AddNote = ({onClick}: {onClick: () => void}) => {
   return (
     <View style={{ backgroundColor: "black" }}>
-      <Pressable style={styles.addNote} onPress={() => {}}>
+      <Pressable style={styles.addNote} onPress={() => onClick()}>
         <Icon name="plus" solid size={20} color="black" />
         <Text style={styles.addNoteText}>Adicionar</Text>
       </Pressable>
@@ -18,6 +19,8 @@ const AddNote = () => {
 
 export default function AnnotationsScreen() {
   const mock = new Array(15).fill(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleModal = () => setIsOpen(!isOpen);
 
   return (
     <>
@@ -53,7 +56,8 @@ export default function AnnotationsScreen() {
           ))}
         </View>
       </BaseView>
-      <AddNote />
+      <AddNote onClick={toggleModal}/>
+      {isOpen && <Modal isOpen={isOpen} setOpen={setIsOpen}/>}
     </>
   );
 }
