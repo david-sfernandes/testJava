@@ -57,11 +57,15 @@ type BookDetails = {
 };
 
 interface User {
+  displayName: string;
   email: string;
-  id: string;
-  name: string;
-  profileImage: string;
-  role: string;
+  emailVerified: boolean;
+  isAnonymous: boolean;
+  phoneNumber: string | null;
+  photoURL: string | null;
+  providerId: string;
+  tenantId: string | null;
+  uid: string;
 }
 
 interface UserStore extends User {

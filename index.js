@@ -28,6 +28,7 @@ export default function Main() {
           screenOptions={{
             headerShown: false,
           }}
+          initialRouteName="Auth"
         >
           <Stack.Screen name="Auth" component={AuthScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
