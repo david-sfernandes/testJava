@@ -1,9 +1,14 @@
 type NavItemProps = { icon: string; text: string };
 
-type BtnProps = { text: string; onPress: () => void; icon?: string, disabled?: boolean };
+type BtnProps = {
+  text: string;
+  onPress: () => void;
+  icon?: string;
+  disabled?: boolean;
+};
 
 type CustomImgResponse = {
-  assets: { uri: string, type: string, fileName: string }[];
+  assets: { uri: string; type: string; fileName: string }[];
 };
 
 type BookProps = {
@@ -25,6 +30,7 @@ type RootStackParamList = {
   Book: { book: BookProps };
   AR: undefined;
   PictureForm: undefined;
+  Auth: undefined;
 };
 
 type Author = {
@@ -49,3 +55,16 @@ type BookDetails = {
   created: { type: string; value: string };
   last_modified: { type: string; value: string };
 };
+
+interface User {
+  email: string;
+  id: string;
+  name: string;
+  profileImage: string;
+  role: string;
+}
+
+interface UserStore extends User {
+  setUser: (user: User) => void;
+  clearUser: () => void;
+}

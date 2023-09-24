@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "216882184573",
+    "project_id": "areader-ac924",
+    "storage_bucket": "areader-ac924.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216882184573:android:2c0ed653d40660170a8c14",
+        "android_client_info": {
+          "package_name": "com.testjava"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216882184573-e22c6st83h8hb5b4hmt7e5qh0k4r61mn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.testjava",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "216882184573-ra5tvtb9hkef3afp65bbq6dr7ddnk0o2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7uejEd2wrAKljFObDm9LvvYUjztYJo_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216882184573-oj33q08aov07k7jbml1o4hiqk1ps550s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,6 +11,12 @@ import AnnotationsScreen from "./src/screens/AnnotationsScreen";
 import BookScreen from "./src/screens/BookScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import PictureFormScreen from "./src/screens/PictureFormScreen";
+import AuthScreen from "./src/screens/AuthScreen";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
+GoogleSignin.configure({
+  webClientId: "216882184573-ra5tvtb9hkef3afp65bbq6dr7ddnk0o2.apps.googleusercontent.com"
+});
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +29,7 @@ export default function Main() {
             headerShown: false,
           }}
         >
+          <Stack.Screen name="Auth" component={AuthScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Book" component={BookScreen} />
           <Stack.Screen name="AR" component={ARScreen} />
