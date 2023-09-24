@@ -23,10 +23,10 @@ export default function MainBanner() {
               style={{
                 flex: 1,
                 textAlign: "center",
-                ...fonts.h1,
                 textShadowColor: "rgba(0, 0, 0, 0.3)",
                 textShadowOffset: { width: -1, height: 1 },
                 textShadowRadius: 10,
+                ...fonts.h1,
               }}
             >
               Olá, Fulano!
