@@ -35,6 +35,7 @@ export default function ProfileScreen() {
       }}
     >
       <View style={styles.container}>
+        <Text style={[fonts.h2, { textAlign: "center" }]}>Profile</Text>
         {photoURL && (
           <Image source={{ uri: photoURL }} style={styles.userImg} />
         )}

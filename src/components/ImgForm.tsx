@@ -27,7 +27,7 @@ export default function ImgForm({ isOpen, setOpen }) {
   const [res, setRes] = useState<string>("");
   const [showError, setShowError] = useState(false);
 
-  const [showNotification, setShowNotification] = useState(true);
+  const [showNotification, setShowNotification] = useState(false);
 
   const [image, setImage] = useState<{
     uri: string;

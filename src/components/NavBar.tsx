@@ -1,13 +1,23 @@
-import React from "react";
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { BlurView } from "@react-native-community/blur";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
+import { Shadow } from "react-native-shadow-2";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { colors, dimensions, sizing, spacing } from "../styles/base";
-import { Shadow } from "react-native-shadow-2";
-import { BlurView } from "@react-native-community/blur";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
 
 export default function NavBar() {
+  const [mount, setMount] = useState(false);
+
+  useEffect(() => setMount(true), []);
+
+  if (!mount) null; 
+
   return (
     <View style={styles.navContainer}>
       <Shadow

@@ -1,10 +1,16 @@
+import React, {useState, useEffect} from "react";
 import { BlurView } from "@react-native-community/blur";
-import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 import { colors, dimensions, fonts, sizing, spacing } from "../styles/base";
 
 export default function MainBanner() {
+  const [mount, setMount] = useState(false);
+
+  useEffect(() => setMount(true), []);
+
+  if (!mount) return null;
+
   return (
     <View style={styles.container}>
       <Shadow
