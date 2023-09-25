@@ -1,9 +1,11 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { colors, dimensions, sizing, spacing } from "../styles/base";
 import { Shadow } from "react-native-shadow-2";
 import { BlurView } from "@react-native-community/blur";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 export default function NavBar() {
   return (
@@ -20,10 +22,10 @@ export default function NavBar() {
           overlayColor="rgba(136, 136, 136, 0.5)"
         >
           <View style={styles.navBar}>
-            <NavItem icon="home" text="Home" />
-            <NavItem icon="book" text="Biblioteca" />
-            <NavItem icon="users" text="Grupos" />
-            <NavItem icon="comment" text="Chat" />
+            <NavItem icon="home" text="Home" target="Home" />
+            <NavItem icon="book" text="Biblioteca" target="Library" />
+            <NavItem icon="users" text="Grupos" target="Groups" />
+            <NavItem icon="user-alt" text="Perfil" target="Profile" />
           </View>
         </BlurView>
       </Shadow>
@@ -31,16 +33,17 @@ export default function NavBar() {
   );
 }
 
-function NavItem({ icon, text }: NavItemProps) {
+function NavItem({ icon, text, target }: NavItemProps) {
+  const navigation = useNavigation<NavigationProps>();
+
   return (
-    <View style={styles.navItem}>
-      <Icon
-        name={icon}
-        size={28}
-        color={colors.gray}
-      />
+    <Pressable
+      style={styles.navItem}
+      onPress={() => navigation.navigate(target)}
+    >
+      <Icon name={icon} size={28} color={colors.gray} />
       <Text style={styles.navText}>{text}</Text>
-    </View>
+    </Pressable>
   );
 }
 

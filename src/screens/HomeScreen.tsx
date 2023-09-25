@@ -23,7 +23,7 @@ export default function HomeScreen() {
   return (
     <BaseView activeHeader activeNav img={img}>
       <MainBanner />
-      <Text style={styles.sectionText}>Recomendações</Text>
+      <Text style={[fonts.h4, styles.sectionText]}>Recomendações</Text>
       {books.length > 0 ? (
         <BookList books={books} />
       ) : (
@@ -35,7 +35,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   sectionText: {
-    ...fonts.h4,
     marginTop: spacing.lg,
     marginBottom: spacing.md,
     paddingHorizontal: spacing.md,

@@ -13,6 +13,9 @@ import HomeScreen from "./src/screens/HomeScreen";
 import PictureFormScreen from "./src/screens/PictureFormScreen";
 import AuthScreen from "./src/screens/AuthScreen";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import ProfileScreen from "./src/screens/ProfileScreen";
+import GroupsScreen from "./src/screens/GroupsScreen";
+import LibraryScreen from "./src/screens/LibraryScreen";
 
 GoogleSignin.configure({
   webClientId: "216882184573-ra5tvtb9hkef3afp65bbq6dr7ddnk0o2.apps.googleusercontent.com"
@@ -36,6 +39,9 @@ export default function Main() {
           <Stack.Screen name="AR" component={ARScreen} />
           <Stack.Screen name="PictureForm" component={PictureFormScreen} />
           <Stack.Screen name="Annotations" component={AnnotationsScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Groups" component={GroupsScreen} />
+          <Stack.Screen name="Library" component={LibraryScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

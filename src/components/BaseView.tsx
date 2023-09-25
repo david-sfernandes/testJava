@@ -4,18 +4,17 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
-import { colors, dimensions, fonts, spacing } from "../styles/base";
+import { colors, dimensions } from "../styles/base";
 import BackgroundImage from "./BackgroundGradient";
-import NavBar from "./NavBar";
 import Header from "./Header";
+import NavBar from "./NavBar";
 
 type BaseViewProps = PropsWithChildren & {
   activeNav?: boolean;
   activeHeader?: boolean;
-  img: any;
+  img?: any;
 };
 
 export default function BaseView({
@@ -28,7 +27,7 @@ export default function BaseView({
     <SafeAreaView style={styles.screen}>
       <StatusBar animated={true} backgroundColor="#ffffff00" translucent />
       <ScrollView>
-        <BackgroundImage img={img} />
+        {img && <BackgroundImage img={img} />}
         <View style={styles.statusBarSpacer} />
         {activeHeader ? <Header /> : null}
         {children}
@@ -43,9 +42,9 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: colors.black,
     height: dimensions.fullHeight + 2 * (StatusBar.currentHeight || 0),
-    marginTop: StatusBar.currentHeight ? -1*StatusBar.currentHeight : 0,
+    marginTop: StatusBar.currentHeight ? -1 * StatusBar.currentHeight : 0,
   },
   statusBarSpacer: {
-    paddingBottom: 2 * (StatusBar.currentHeight || 0)
+    paddingBottom: 2 * (StatusBar.currentHeight || 0),
   },
 });

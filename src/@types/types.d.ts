@@ -1,4 +1,4 @@
-type NavItemProps = { icon: string; text: string };
+type NavItemProps = { icon: string; text: string; target: string };
 
 type BtnProps = {
   text: string;
@@ -25,12 +25,14 @@ type BooksResponse = {
   works: BookProps[];
 };
 
-type RootStackParamList = {
+type NavigationProps = {
+  navigate(arg0: string): unknown;
   Home: undefined;
   Book: { book: BookProps };
   AR: undefined;
   PictureForm: undefined;
   Auth: undefined;
+  Profile: undefined;
 };
 
 type Author = {

@@ -8,7 +8,7 @@ import Rating from "../components/Rating";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Book">;
+type Props = NativeStackScreenProps<NavigationProps, "Book">;
 
 export default function BookScreen({ route }: Props) {
   const navigation = useNavigation();

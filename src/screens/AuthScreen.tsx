@@ -1,15 +1,19 @@
 import auth from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Button, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import BaseView from "../components/BaseView";
+import PrimaryBtn from "../components/PrimaryBtn";
 import { useUserStore } from "../store/userStore";
-import { fonts } from "../styles/base";
+import { dimensions, fonts } from "../styles/base";
+import SecondaryBtn from "../components/SecondaryBtn";
 
 export default function AuthScreen() {
   const [initializing, setInitializing] = useState(true);
   const { setUser, clearUser, displayName, email } = useUserStore();
   auth().onAuthStateChanged(onAuthStateChanged);
+  const navigation = useNavigation<NavigationProps>();
 
   async function onGoogleButtonPress() {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
@@ -22,16 +26,26 @@ export default function AuthScreen() {
   }
 
   const login = () => {
-    onGoogleButtonPress().catch((err) => {
-      console.log("Error: ", err);
-    });
+    onGoogleButtonPress()
+      .then(() => {
+        navigation.navigate("Home");
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+      });
   };
 
   const logout = async () => {
-    if (email) auth().signOut();
-    await GoogleSignin.revokeAccess();
-    await GoogleSignin.signOut();
     clearUser();
+    if (email) auth().signOut();
+    try {
+      if (await GoogleSignin.isSignedIn()) {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   function onAuthStateChanged() {
@@ -39,22 +53,66 @@ export default function AuthScreen() {
   }
 
   return (
-    <BaseView img={require("../assets/bg-home.png")}>
-      {initializing && <Text>Loading...</Text>}
-      {email ? (
-        <View>
-          <Text style={fonts.h1}>Welcome {displayName}</Text>
-          <Button onPress={() => logout()} title="Logout" />
+    <BaseView>
+      <ImageBackground
+        source={{
+          uri: "https://i.pinimg.com/564x/89/70/fd/8970fda24f3e1a8d763ae54c04d04ecb.jpg",
+        }}
+        style={{ width: "100%", height: "100%" }}
+      >
+        <View style={styles.container}>
+          {initializing && <Text>Loading...</Text>}
+          {email ? (
+            <>
+              <Text style={[fonts.h2, styles.mainText]}>
+                Você já está logado!
+              </Text>
+              <PrimaryBtn
+                onPress={() => navigation.navigate("Home")}
+                text="Continuar no app"
+              />
+              <SecondaryBtn onPress={logout} text="Logout" />
+            </>
+          ) : (
+            <>
+              <Text
+                style={[
+                  fonts.h1,
+                  styles.mainText
+                ]}
+              >
+                AReader
+              </Text>
+              <PrimaryBtn
+                onPress={login}
+                text="Continuar com Google"
+                icon="google"
+              />
+            </>
+          )}
         </View>
-      ) : (
-        <View>
-          <Text style={fonts.h1}>Login</Text>
-          <Button onPress={login} title="Make google login" />
-        </View>
-      )}
+      </ImageBackground>
     </BaseView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignText: "center",
+    display: "flex",
+    justifyContent: "center",
+    height: dimensions.fullHeight,
+    padding: 20,
+    gap: 5,
+  },
+  mainText: {
+    fontSize: 55,
+    marginBottom: 100,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+});
 
 // const res = {
 //   additionalUserInfo: {
