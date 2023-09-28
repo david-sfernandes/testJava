@@ -1,31 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import BaseView from "../components/BaseView";
-import BookList from "../components/BookList";
 import MainBanner from "../components/MainBanner";
-import mock from "../data/mock";
+import api from "../data/api";
 import { fonts, spacing } from "../styles/base";
+import BookSlider from "../components/BookSlider";
 
 export default function HomeScreen() {
   const img = require("../assets/bg-home.png");
-  const [books, setBooks] = useState<BookProps[]>(mock);
-
+  const [books, setBooks] = useState<Book[]>([]);
   // const [books, setBooks] = useState<BookProps[]>([]);
 
-  // useEffect(() => {
-  //   fetch("https://openlibrary.org/trending.json?limit=6")
-  //     .then((res) => res.json())
-  //     .then((res: BooksResponse) => setBooks(res.works))
-  //     .catch((err) => console.error(err));
-  // }, []);
+  useEffect(() => {
+    fetch(api.recomendations)
+      .then((res) => res.json())
+      .then((res: ApiResponse) => setBooks(res.items))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <BaseView activeHeader activeNav img={img}>
       <MainBanner />
       <Text style={[fonts.h4, styles.sectionText]}>Recomendações</Text>
       {books.length > 0 ? (
-        <BookList books={books} />
+        <BookSlider books={books} />
+      ) : (
+        <Text style={fonts.h4}>Loading...</Text>
+      )}
+      <Text style={[fonts.h4, styles.sectionText]}>Recomendações</Text>
+      {books.length > 0 ? (
+        <BookSlider books={books} />
       ) : (
         <Text style={fonts.h4}>Loading...</Text>
       )}
@@ -36,7 +41,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   sectionText: {
     marginTop: spacing.lg,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
     paddingHorizontal: spacing.md,
   },
 });

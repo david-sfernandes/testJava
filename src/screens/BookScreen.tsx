@@ -1,38 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import React from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
-import { colors, fonts, spacing } from "../styles/base";
-import BackgroundImage from "../components/BackgroundGradient";
-import { useNavigation } from "@react-navigation/native";
-import Rating from "../components/Rating";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import BackgroundImage from "../components/BackgroundGradient";
+import Rating from "../components/Rating";
+import { colors, fonts, spacing } from "../styles/base";
 
 type Props = NativeStackScreenProps<NavigationProps, "Book">;
 
 export default function BookScreen({ route }: Props) {
   const navigation = useNavigation();
-  const [bookdetails, setBookdetails] = useState<BookDetails>();
   const { book } = route.params;
-
-  useEffect(() => {
-    fetch(
-      `https://openlibrary.org${book.key}.json`
-    )
-      .then((res) => res.json())
-      .then((res: BookDetails) => {
-        setBookdetails(res);
-      })
-      .catch((err) => console.error(err));
-  }, []);
 
   return (
     <SafeAreaView style={styles.screen}>
-      <BackgroundImage
-        img={{
-          uri: `https://covers.openlibrary.org/b/olid/${book.cover_edition_key}-M.jpg`,
-        }}
-      />
+      <BackgroundImage img={{ uri: book.volumeInfo.imageLinks?.thumbnail }} />
       <ScrollView>
         <View style={styles.main}>
           <View
@@ -43,10 +27,10 @@ export default function BookScreen({ route }: Props) {
           >
             <View style={{ flex: 1 }}>
               <Text variant="headlineLarge" style={fonts.h1}>
-                {book.title}
+                {book.volumeInfo.title}
               </Text>
               <Text variant="headlineSmall" style={fonts.h4}>
-                {book.author_name[0]}
+                {book.volumeInfo.authors[0]}
               </Text>
               <Rating />
             </View>
@@ -61,7 +45,7 @@ export default function BookScreen({ route }: Props) {
           >
             <Button
               // @ts-ignore: suppress param type
-              onPress={() => navigation.navigate("Annotations")}
+              onPress={() => navigation.navigate("Annotations", { book })}
               mode="contained"
               icon="sticker-text"
               textColor="white"
@@ -92,9 +76,8 @@ export default function BookScreen({ route }: Props) {
         <View style={styles.descriptionContainer}>
           <Text style={fonts.h3}>Descrição</Text>
           <Text style={fonts.default}>
-            {bookdetails?.description?.value || "Descrição não está disponível"}
+            {book.volumeInfo.description || "Descrição não está disponível"}
           </Text>
-          
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -5,6 +5,7 @@ import BaseView from "../components/BaseView";
 import ImgForm from "../components/ImgForm";
 import NoteCard from "../components/NoteCard";
 import { colors, fonts, spacing } from "../styles/base";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 const AddNote = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -17,17 +18,22 @@ const AddNote = ({ onClick }: { onClick: () => void }) => {
   );
 };
 
-export default function AnnotationsScreen() {
+type Props = NativeStackScreenProps<NavigationProps, "Book">;
+
+export default function AnnotationsScreen({ route }: Props) {
+  const { book } = route.params;
   const mock = new Array(15).fill(0);
   const [isOpen, setIsOpen] = useState(false);
   const toggleModal = () => setIsOpen(!isOpen);
 
   return (
     <>
-      <BaseView img={require("../assets/bg-home.png")}>
+      <BaseView img={{ uri: book.volumeInfo.imageLinks?.thumbnail }}>
         <View style={styles.main}>
-          <Text style={fonts.h1}>Nome do livro</Text>
-          <Text style={{ ...fonts.h3, marginTop: 0 }}>Nome do autor</Text>
+          <Text style={fonts.h1}>{book.volumeInfo.title}</Text>
+          <Text style={[fonts.h3, styles.author]}>
+            {book.volumeInfo.authors[0]}
+          </Text>
           <View
             style={{
               display: "flex",
@@ -92,5 +98,8 @@ const styles = StyleSheet.create({
   addNoteText: {
     fontSize: 12,
     color: "black",
+  },
+  author: {
+    marginTop: 0,
   },
 });

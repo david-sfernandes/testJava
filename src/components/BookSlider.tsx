@@ -1,14 +1,14 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import Book from "./Book";
 
-export default function BookList({ books }: { books: Book[] }) {
+export default function BookSlider({ books }: { books: Book[] }) {
   return (
-    <View style={styles.bookList}>
+    <ScrollView horizontal style={styles.slider}>
       {books.map((book) => (
         <Book book={book} key={book.id} />
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -17,9 +17,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexWrap: "wrap",
     flexDirection: "row",
-    rowGap: 8,
+    gap: 8,
     width: "100%",
     justifyContent: "center",
     paddingBottom: 100,
   },
+  slider: {
+    gap: 8,
+  }
 });

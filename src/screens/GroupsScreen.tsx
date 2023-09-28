@@ -14,7 +14,7 @@ export default function GroupsScreen() {
       }}
     >
       <View style={styles.headerContainer}>
-        <Text style={[fonts.h2]}>Groups</Text>
+        <Text style={[fonts.h2]}>Grupos</Text>
         <PrimaryBtn text="Criar grupo" icon="plus" />
       </View>
       <GroupCard img="https://www.liveborders.org.uk/wp-content/uploads/2019/02/Reading-group-e1677601344349.jpg"/>

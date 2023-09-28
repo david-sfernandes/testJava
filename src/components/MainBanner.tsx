@@ -3,9 +3,11 @@ import { BlurView } from "@react-native-community/blur";
 import { StyleSheet, Text, View } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 import { colors, dimensions, fonts, sizing, spacing } from "../styles/base";
+import { useUserStore } from "../store/userStore";
 
 export default function MainBanner() {
   const [mount, setMount] = useState(false);
+  const { displayName } = useUserStore();
 
   useEffect(() => setMount(true), []);
 
@@ -35,7 +37,7 @@ export default function MainBanner() {
                 ...fonts.h1,
               }}
             >
-              Olá, Fulano!
+              Olá, {displayName.split(" ")[0]}
             </Text>
             <View style={styles.statBox}>
               <Stat title="Lidos" value="134" />
