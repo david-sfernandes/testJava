@@ -5,7 +5,7 @@ import { dimensions, fonts, spacing } from "../styles/base";
 
 export default function NoteCard() {
   return (
-    <View style={styles.navContainer}>
+    <View style={styles.container}>
       <Shadow
         style={styles.shadow}
         startColor="rgba(0, 0, 0, 0.1)"
@@ -14,7 +14,7 @@ export default function NoteCard() {
         <ImageBackground
           source={require("../assets/bgBlur.png")}
           blurRadius={30}
-          style={styles.blurView}
+          style={styles.bg}
         >
           <View style={styles.navBar}>
             <Text style={[fonts.default, styles.cardText]}>
@@ -33,7 +33,7 @@ export default function NoteCard() {
 const CARD_WIDTH = dimensions.fullWidth - 2 * spacing.md;
 
 const styles = StyleSheet.create({
-  navContainer: {
+  container: {
     flex: 1,
     zIndex: 1,
     borderRadius: 20,
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH,
     overflow: "hidden",
   },
-  blurView: {
+  bg: {
     flex: 1,
   },
   navBar: {

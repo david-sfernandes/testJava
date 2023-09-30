@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from "react";
-import { BlurView } from "@react-native-community/blur";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { Shadow } from "react-native-shadow-2";
-import { colors, dimensions, fonts, sizing, spacing } from "../styles/base";
 import { useUserStore } from "../store/userStore";
+import { colors, dimensions, fonts, sizing, spacing } from "../styles/base";
 
 export default function MainBanner() {
   const [mount, setMount] = useState(false);
@@ -15,16 +14,16 @@ export default function MainBanner() {
 
   return (
     <View style={styles.container}>
-      <Shadow
-        style={styles.shadow}
-        startColor="rgba(0, 0, 0, 0.1)"
-        distance={6}
+      <ImageBackground
+        source={{
+          uri: "https://i.pinimg.com/564x/5b/d9/37/5bd9374222f5929393b77fb48780c10c.jpg",
+        }}
+        imageStyle={{ borderRadius: 20 }}
       >
-        <BlurView
-          blurAmount={16}
-          style={styles.blurView}
-          blurType="light"
-          overlayColor="rgba(255, 255, 255, 0.08)"
+        <Shadow
+          style={styles.shadow}
+          startColor="rgba(0, 0, 0, 0.2)"
+          distance={6}
         >
           <View style={styles.contentBox}>
             <Text
@@ -45,8 +44,8 @@ export default function MainBanner() {
               <Stat title="Quero ler" value="47" />
             </View>
           </View>
-        </BlurView>
-      </Shadow>
+        </Shadow>
+      </ImageBackground>
     </View>
   );
 }
@@ -76,14 +75,13 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.md,
     width: dimensions.fullWidth - 2 * spacing.md,
     borderRadius: 20,
+    overflow: "hidden",
+    position: "relative",
   },
   shadow: {
     borderRadius: 20,
     overflow: "hidden",
-  },
-  blurView: {
-    width: "100%",
-    borderRadius: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
   },
   contentBox: {
     width: "100%",
@@ -91,10 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    // Prevent break display flex
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "rgba(185, 185, 185, 0.2)",
     tintColor: "#f10d0d",
   },
   statBox: {

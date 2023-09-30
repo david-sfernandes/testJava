@@ -7,7 +7,7 @@ export const dimensions = {
 
 export const colors = {
   gray: "#e5e5e5",
-  darkGray: "#2a2a2a",
+  darkGray: "#242529",
   black: "#141414",
   red: "#ec3912",
   yellow: "#ffc700",
@@ -49,11 +49,10 @@ export const fonts = StyleSheet.create({
     fontWeight: "500",
     fontSize: sizing.lg,
     fontFamily: "RobotoFlex",
-    marginVertical: spacing.sm,
   },
   h4: {
     color: "white",
-    fontWeight: "600",
+    fontWeight: "800",
     fontSize: sizing.md,
     fontFamily: "RobotoFlex",
   },

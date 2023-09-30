@@ -7,6 +7,8 @@ type BtnProps = {
   disabled?: boolean;
 };
 
+type Option = { text: string, value: string };
+
 type CustomImgResponse = {
   assets: { uri: string; type: string; fileName: string }[];
 };
@@ -32,6 +34,7 @@ type Book = {
   etag: string;
   selfLink: string;
   volumeInfo: {
+    subtitle?: string;
     title: string;
     authors: string[];
     publisher: string;
@@ -134,6 +137,7 @@ type NavigationProps = {
   Auth: undefined;
   Profile: undefined;
   Annotations: { book: Book };
+  Search: { value: string };
 };
 
 type Author = {

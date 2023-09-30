@@ -4,6 +4,7 @@ import { Image, Pressable, StyleSheet } from "react-native";
 
 export default function Book({ book }: { book: Book }) {
   const navigation = useNavigation();
+  const image = book.volumeInfo.imageLinks?.thumbnail ? {uri: book.volumeInfo.imageLinks?.thumbnail} : require("../assets/placeholder.png");
   return (
     <Pressable
       onPress={() => {
@@ -13,7 +14,7 @@ export default function Book({ book }: { book: Book }) {
       style={styles.bookContainer}
     >
       <Image
-        source={{ uri: book.volumeInfo.imageLinks?.thumbnail }}
+        source={{ uri: book.volumeInfo.imageLinks?.thumbnail  }}
         style={styles.image}
       />
     </Pressable>

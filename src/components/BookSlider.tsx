@@ -1,14 +1,34 @@
-import React from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { fonts, spacing } from "../styles/base";
 import Book from "./Book";
 
-export default function BookSlider({ books }: { books: Book[] }) {
+export default function BookSlider({
+  listUrl,
+  title,
+}: {
+  listUrl: string;
+  title: string;
+}) {
+  const [books, setBooks] = useState<Book[]>([]);
+
+  useEffect(() => {
+    fetch(listUrl)
+      .then((res) => res.json())
+      .then((res: ApiResponse) => setBooks(res.items))
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
-    <ScrollView horizontal style={styles.slider}>
-      {books.map((book) => (
-        <Book book={book} key={book.id} />
-      ))}
-    </ScrollView>
+    <View>
+      <Text style={[fonts.h4, styles.sectionText]}>{title}</Text>
+      <ScrollView horizontal style={styles.slider}>
+        <View style={{ width: 10 }} />
+        {books.map((book) => (
+          <Book book={book} key={book.id} />
+        ))}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -24,5 +44,10 @@ const styles = StyleSheet.create({
   },
   slider: {
     gap: 8,
-  }
+  },
+  sectionText: {
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.md,
+  },
 });
