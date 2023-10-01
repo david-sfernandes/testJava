@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "react-native-paper";
 import { colors } from "../styles/base";
 
-export default function SecondaryBtn({ onPress, text, icon = "", disabled }: BtnProps) {
+export default function BtnSecondary({ onPress, text, icon = "", disabled }: BtnProps) {
   return (
     <Button
       onPress={() => onPress()}

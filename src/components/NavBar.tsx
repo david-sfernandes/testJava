@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
@@ -7,12 +7,6 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { colors, dimensions, sizing, spacing } from "../styles/base";
 
 export default function NavBar() {
-  const [mount, setMount] = useState(false);
-
-  useEffect(() => setMount(true), []);
-
-  if (!mount) null;
-
   return (
     <View style={styles.container}>
       <Shadow

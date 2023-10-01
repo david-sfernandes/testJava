@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { Snackbar } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { dimensions, fonts } from "../styles/base";
@@ -9,31 +9,37 @@ export default function NavBar({ text, icon, visible, setVisible }) {
 
   return (
     <Snackbar
-      style={{
-        position: "absolute",
-        bottom: 20,
-        left: 0,
-        right: 0,
-        display: "flex",
-        alignItems: "center",
-        alignContent: "center",
-        width: dimensions.fullWidth - 40,
-        marginHorizontal: 20,
-      }}
+      style={styles.snackbar}
       visible={visible}
       onDismiss={onDismissSnackBar}
-      // duration={5000}
       action={{
         label: "Ok",
       }}
       elevation={5}
     >
-      <Text style={[fonts.default, {
-        marginVertical: "auto",
-        marginBottom: -5,
-      }]}>
-        {icon && <Icon name={icon} solid size={14} color="white" />} {" " + text}
+      <Text style={styles.text}>
+        {icon && <Icon name={icon} solid size={14} color="white" />}{" "}
+        {" " + text}
       </Text>
     </Snackbar>
   );
 }
+
+const styles = StyleSheet.create({
+  text: {
+    ...fonts.default,
+    marginVertical: "auto",
+    marginBottom: -5,
+  },
+  snackbar: {
+    position: "absolute",
+    bottom: 20,
+    left: 0,
+    right: 0,
+    display: "flex",
+    alignItems: "center",
+    alignContent: "center",
+    width: dimensions.fullWidth - 40,
+    marginHorizontal: 20,
+  },
+});

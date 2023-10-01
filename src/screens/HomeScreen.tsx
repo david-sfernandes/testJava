@@ -1,10 +1,8 @@
 import React from "react";
-import { StyleSheet } from "react-native";
 import BaseView from "../components/BaseView";
 import BookSlider from "../components/BookSlider";
 import MainBanner from "../components/MainBanner";
 import api from "../data/api";
-import { spacing } from "../styles/base";
 
 export default function HomeScreen() {
   return (
@@ -16,11 +14,3 @@ export default function HomeScreen() {
     </BaseView>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionText: {
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
-    paddingHorizontal: spacing.md,
-  },
-});

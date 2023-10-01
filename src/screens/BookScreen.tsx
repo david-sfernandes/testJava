@@ -4,9 +4,9 @@ import React from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import BackgroundImage from "../components/BackgroundGradient";
-import PrimaryBtn from "../components/PrimaryBtn";
-import SecondaryBtn from "../components/SecondaryBtn";
+import BackgroundImage from "../components/BgGradientient";
+import BtnPrimary from "../components/BtnPrimary";
+import BtnSecondary from "../components/BtnSecondary";
 import { colors, fonts, spacing } from "../styles/base";
 import GoBack from "../components/GoBack";
 
@@ -47,13 +47,13 @@ export default function BookScreen({ route }: Props) {
             <Icon name="heart" solid size={30} color={colors.red} />
           </View>
           <View style={styles.btnBox}>
-            <SecondaryBtn
+            <BtnSecondary
               text="Anotaçôes"
               icon="sticker-text"
               // @ts-ignore: suppress param type
               onPress={() => navigation.navigate("Annotations", { book })}
             />
-            <PrimaryBtn
+            <BtnPrimary
               text="Ver"
               icon="camera"
               // @ts-ignore: suppress param type

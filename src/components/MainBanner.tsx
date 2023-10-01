@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 import { useUserStore } from "../store/userStore";
 import { colors, dimensions, fonts, sizing, spacing } from "../styles/base";
 
 export default function MainBanner() {
-  const [mount, setMount] = useState(false);
   const { displayName } = useUserStore();
-
-  useEffect(() => setMount(true), []);
-
-  if (!mount) return null;
 
   return (
     <View style={styles.container}>
@@ -60,17 +55,6 @@ function Stat({ title, value }: { title: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
-  navItem: {
-    gap: 2,
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: colors.transparent,
-  },
-  navText: {
-    color: colors.gray,
-    fontSize: sizing.xs,
-  },
   container: {
     marginHorizontal: spacing.md,
     width: dimensions.fullWidth - 2 * spacing.md,

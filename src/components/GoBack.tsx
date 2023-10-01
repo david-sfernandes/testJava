@@ -1,16 +1,14 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { spacing } from "../styles/base";
-import { useNavigation } from "@react-navigation/native";
 
 export default function GoBack() {
   const navigation = useNavigation();
 
   return (
-    <Pressable
-      onPress={() => navigation.goBack()}
-    >
+    <Pressable onPress={() => navigation.goBack()}>
       <Icon
         name="chevron-left"
         solid

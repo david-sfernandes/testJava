@@ -1,10 +1,13 @@
-import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
 import { Image, Pressable, StyleSheet } from "react-native";
 
 export default function Book({ book }: { book: Book }) {
   const navigation = useNavigation();
-  const image = book.volumeInfo.imageLinks?.thumbnail ? {uri: book.volumeInfo.imageLinks?.thumbnail} : require("../assets/placeholder.png");
+  const image = book.volumeInfo.imageLinks?.thumbnail
+    ? { uri: book.volumeInfo.imageLinks?.thumbnail }
+    : require("../assets/placeholder.png");
+
   return (
     <Pressable
       onPress={() => {
@@ -13,10 +16,7 @@ export default function Book({ book }: { book: Book }) {
       }}
       style={styles.bookContainer}
     >
-      <Image
-        source={{ uri: book.volumeInfo.imageLinks?.thumbnail  }}
-        style={styles.image}
-      />
+      <Image source={image} style={styles.image} />
     </Pressable>
   );
 }

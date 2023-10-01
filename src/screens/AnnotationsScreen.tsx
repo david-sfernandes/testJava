@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -5,7 +6,6 @@ import BaseView from "../components/BaseView";
 import ImgForm from "../components/ImgForm";
 import NoteCard from "../components/NoteCard";
 import { colors, fonts, spacing } from "../styles/base";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 const AddNote = ({ onClick }: { onClick: () => void }) => {
   return (

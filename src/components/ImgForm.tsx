@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, View } from "react-native";
 import BottomSheet from "../components/BottomSheet";
 import { colors } from "../styles/base";
-import PrimaryBtn from "./PrimaryBtn";
-import SecondaryBtn from "./SecondaryBtn";
+import BtnPrimary from "./BtnPrimary";
+import BtnSecondary from "./BtnSecondary";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import Notification from "./Notification";
 
@@ -99,13 +99,13 @@ export default function ImgForm({ isOpen, setOpen }) {
           <Image source={{ uri: image.uri }} style={styles.smallImg} />
         )}
         <View style={styles.btnContainer}>
-          <PrimaryBtn
+          <BtnPrimary
             onPress={takePicture}
             text="Tirar foto"
             icon="camera"
             disabled={loading}
           />
-          <SecondaryBtn
+          <BtnSecondary
             onPress={openGallery}
             text="Abrir galeria"
             icon="image-outline"
@@ -131,7 +131,7 @@ export default function ImgForm({ isOpen, setOpen }) {
           {textLength}/{MAX_CHARS}
         </Text>
       </View>
-      <PrimaryBtn
+      <BtnPrimary
         onPress={() => sendData()}
         text={loading ? "Enviando..." : "Salvar"}
         disabled={loading || !isTextValid || !image}

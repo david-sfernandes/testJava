@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import { colors, dimensions } from "../styles/base";
-import BackgroundImage from "./BackgroundGradient";
+import BgGradient from "./BgGradient";
 import Header from "./Header";
 import NavBar from "./NavBar";
 
@@ -27,7 +27,7 @@ export default function BaseView({
     <SafeAreaView style={styles.screen}>
       <StatusBar animated={true} backgroundColor="#ffffff00" translucent />
       <ScrollView>
-        {img && <BackgroundImage img={img} />}
+        {img && <BgGradient img={img} />}
         <View style={styles.statusBarSpacer} />
         {activeHeader ? <Header /> : null}
         {children}

@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { colors, dimensions } from "../styles/base";
 
-export default function BackgroundGradient({ img }: { img: any }) {
+export default function BgGradient({ img }: { img: any }) {
   return (
     <ImageBackground source={img} style={styles.bgImage}>
       <LinearGradient

@@ -5,7 +5,9 @@ import Chip from "./Chip";
 export default function Filter({ options }: { options: Option[] }) {
   return (
     <View style={styles.chipBox}>
-      {options.map((option) => <Chip option={option} key={option.value}/>)}
+      {options.map((option) => (
+        <Chip option={option} key={option.value} />
+      ))}
     </View>
   );
 }

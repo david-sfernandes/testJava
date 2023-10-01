@@ -4,10 +4,10 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import BaseView from "../components/BaseView";
-import PrimaryBtn from "../components/PrimaryBtn";
+import BtnPrimary from "../components/BtnPrimary";
 import { useUserStore } from "../store/userStore";
 import { dimensions, fonts } from "../styles/base";
-import SecondaryBtn from "../components/SecondaryBtn";
+import BtnSecondary from "../components/BtnSecondary";
 
 export default function AuthScreen() {
   const [initializing, setInitializing] = useState(true);
@@ -67,11 +67,11 @@ export default function AuthScreen() {
               <Text style={[fonts.h2, styles.mainText]}>
                 Você já está logado!
               </Text>
-              <PrimaryBtn
+              <BtnPrimary
                 onPress={() => navigation.navigate("Home")}
                 text="Continuar no app"
               />
-              <SecondaryBtn onPress={logout} text="Logout" />
+              <BtnSecondary onPress={logout} text="Logout" />
             </>
           ) : (
             <>
@@ -83,7 +83,7 @@ export default function AuthScreen() {
               >
                 AReader
               </Text>
-              <PrimaryBtn
+              <BtnPrimary
                 onPress={login}
                 text="Continuar com Google"
                 icon="google"

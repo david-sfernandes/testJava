@@ -2,44 +2,36 @@ type NavItemProps = { icon: string; text: string; target: string };
 
 type BtnProps = {
   text: string;
-  onPress: () => void;
   icon?: string;
   disabled?: boolean;
+  onPress: () => void;
 };
 
-type Option = { text: string, value: string };
+type Option = { text: string; value: string };
 
 type CustomImgResponse = {
   assets: { uri: string; type: string; fileName: string }[];
 };
 
-// type BookProps = {
-//   id?: string;
-//   title: string;
-//   cover_edition_key?: string;
-//   author_name: string[];
-//   key: string;
-// };
-
 // type for a books from google api
 type ApiResponse = {
   kind: string;
-  totalItems: number;
   items: Book[];
+  totalItems: number;
 };
 
 type Book = {
-  kind: string;
   id: string;
+  kind: string;
   etag: string;
   selfLink: string;
   volumeInfo: {
-    subtitle?: string;
     title: string;
+    subtitle?: string;
     authors: string[];
     publisher: string;
-    publishedDate: string;
     description: string;
+    publishedDate: string;
     industryIdentifiers: {
       type: string;
       identifier: string;
@@ -52,19 +44,19 @@ type Book = {
     printType: string;
     categories: string[];
     maturityRating: string;
-    allowAnonLogging: boolean;
     contentVersion: string;
+    allowAnonLogging: boolean;
     panelizationSummary: {
       containsEpubBubbles: boolean;
       containsImageBubbles: boolean;
     };
     imageLinks: {
-      smallThumbnail: string;
       thumbnail: string;
+      smallThumbnail: string;
     };
     language: string;
-    previewLink: string;
     infoLink: string;
+    previewLink: string;
     canonicalVolumeLink: string;
   };
   layerInfo: {
@@ -75,8 +67,8 @@ type Book = {
   };
   saleInfo: {
     country: string;
-    saleability: string;
     isEbook: boolean;
+    saleability: string;
     listPrice: {
       amount: number;
       currencyCode: string;
@@ -93,8 +85,8 @@ type Book = {
         currencyCode: string;
       };
       retailPrice: {
-        amountInMicros: number;
         currencyCode: string;
+        amountInMicros: number;
       };
       giftable: boolean;
     }[];
@@ -121,61 +113,19 @@ type Book = {
   };
 };
 
-
-// type BooksResponse = {
-//   // openlibrary api response
-//   query: string;
-//   works: BookProps[];
-// };
-
 type NavigationProps = {
-  navigate(arg0: string): unknown;
-  Home: undefined;
-  Book: { book: Book };
   AR: undefined;
-  PictureForm: undefined;
+  Home: undefined;
   Auth: undefined;
   Profile: undefined;
-  Annotations: { book: Book };
+  Book: { book: Book };
+  PictureForm: undefined;
   Search: { value: string };
+  Annotations: { book: Book };
+  navigate(arg0: string): unknown;
 };
 
 type Author = {
+  type: { key: string };
   author: { key: string };
-  type: { key: string };
 };
-
-type BookDetails = {
-  title: string;
-  key: string;
-  authors: Author[];
-  type: { key: string };
-  description: { value: string; type: string };
-  covers: number[];
-  subject_places: string[];
-  subjects: string[];
-  subject_people: string[];
-  subject_times: string[];
-  location: string;
-  latest_revision: number;
-  revision: number;
-  created: { type: string; value: string };
-  last_modified: { type: string; value: string };
-};
-
-interface User {
-  displayName: string;
-  email: string;
-  emailVerified: boolean;
-  isAnonymous: boolean;
-  phoneNumber: string | null;
-  photoURL: string | null;
-  providerId: string;
-  tenantId: string | null;
-  uid: string;
-}
-
-interface UserStore extends User {
-  setUser: (user: User) => void;
-  clearUser: () => void;
-}

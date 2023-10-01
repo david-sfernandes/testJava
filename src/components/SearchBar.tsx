@@ -14,7 +14,7 @@ export default function SearchBar() {
         <TextInput
           placeholder="Pesquisar"
           style={styles.input}
-          onSubmitEditing={({nativeEvent}) => {
+          onSubmitEditing={({ nativeEvent }) => {
             // @ts-ignore: suppress param type
             navigation.navigate("Search", { value: nativeEvent.text });
           }}

@@ -1,21 +1,19 @@
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import * as React from "react";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as React from "react";
 import { AppRegistry } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import changeNavigationBarColor from "react-native-navigation-bar-color";
 import { name as appName } from "./app.json";
 import ARScreen from "./src/screens/ARScreen";
 import AnnotationsScreen from "./src/screens/AnnotationsScreen";
-import BookScreen from "./src/screens/BookScreen";
-import HomeScreen from "./src/screens/HomeScreen";
-import PictureFormScreen from "./src/screens/PictureFormScreen";
 import AuthScreen from "./src/screens/AuthScreen";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import ProfileScreen from "./src/screens/ProfileScreen";
+import BookScreen from "./src/screens/BookScreen";
 import GroupsScreen from "./src/screens/GroupsScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 import LibraryScreen from "./src/screens/LibraryScreen";
-import changeNavigationBarColor from "react-native-navigation-bar-color";
-import { colors } from "./src/styles/base";
+import ProfileScreen from "./src/screens/ProfileScreen";
 import SearchScreen from "./src/screens/SearchScreen";
 
 GoogleSignin.configure({
@@ -41,16 +39,15 @@ export default function Main() {
           }}
           initialRouteName="Auth"
         >
+          <Stack.Screen name="AR" component={ARScreen} />
           <Stack.Screen name="Auth" component={AuthScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Book" component={BookScreen} />
-          <Stack.Screen name="AR" component={ARScreen} />
-          <Stack.Screen name="PictureForm" component={PictureFormScreen} />
-          <Stack.Screen name="Annotations" component={AnnotationsScreen} />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Groups" component={GroupsScreen} />
-          <Stack.Screen name="Library" component={LibraryScreen} />
           <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Library" component={LibraryScreen} />
+          <Stack.Screen name="Annotations" component={AnnotationsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

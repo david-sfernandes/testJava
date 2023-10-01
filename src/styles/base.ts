@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const dimensions = {
   fullHeight: Dimensions.get("window").height,
@@ -69,7 +69,6 @@ export const fonts = StyleSheet.create({
     fontSize: sizing.xs,
     fontFamily: "RobotoFlex",
   },
-
   textShadow: {
     textShadowColor: "rgba(0, 0, 0, 1)",
     textShadowOffset: { width: -1, height: 1 },
