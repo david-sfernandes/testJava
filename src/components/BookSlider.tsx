@@ -15,9 +15,13 @@ export default function BookSlider({
   useEffect(() => {
     fetch(listUrl)
       .then((res) => res.json())
-      .then((res: ApiResponse) => setBooks(res.items))
+      .then((res: ApiResponse) => {
+				console.log("RES: ", res)
+				setBooks(res.items)
+			})
       .catch((err) => console.error(err));
   }, []);
+	console.log("BOOKS: ", books)
 
   return (
     <View>

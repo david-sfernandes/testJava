@@ -1,5 +1,6 @@
 package com.testjava;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -35,14 +36,18 @@ import com.testjava.common.helpers.DisplayRotationHelper;
 import com.testjava.common.helpers.FullScreenHelper;
 import com.testjava.common.helpers.SnackbarHelper;
 import com.testjava.common.helpers.TrackingStateHelper;
+import com.testjava.common.models.Annotation;
 import com.testjava.common.rendering.BackgroundRenderer;
 import com.testjava.common.utils.CreateARImageDB;
 import com.testjava.rendering.ARRendering;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -50,7 +55,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class ARActivity extends AppCompatActivity implements GLSurfaceView.Renderer {
-  // Rendering. The Renderers are created here, and initialized when the GL surface is created.
+  // Rendering. The Renderers are created here, and initialized when the GL
+  // surface is created.
   private GLSurfaceView surfaceView;
   private Session session;
   private ImageView fitToScanView;
@@ -67,13 +73,23 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
   private final ARRendering augmentedImageRenderer = new ARRendering();
   private final TrackingStateHelper trackingStateHelper = new TrackingStateHelper(this);
   private final Map<Integer, Pair<AugmentedImage, Anchor>> augmentedImageMap = new HashMap<>();
+  private List<Annotation> annotations;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    super.onCreate(null);
     setContentView(R.layout.activity_main);
+    Intent intent = getIntent();
+    
+    try {
+      annotations = (List<Annotation>) intent.getSerializableExtra("annotations");
+      Log.d(TAG, ">>> ANNOTATIONS length: " + annotations.size());
+    } catch (Exception e) {
+      Log.d(TAG, ">>> ERROR: " + e.getMessage());
+    }
+    
     surfaceView = findViewById(R.id.surfaceview);
-    displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
+    displayRotationHelper = new DisplayRotationHelper(/* context= */ this);
     
     // Set up renderer.
     surfaceView.setPreserveEGLContextOnPause(true);
@@ -88,6 +104,9 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
     RequestManager glideRequestManager = Glide.with(this);
     glideRequestManager.load(Uri.parse("file:///android_asset/fit_to_scan.png")).into(fitToScanView);
     
+    if (annotations.isEmpty())
+      messageSnackBarHelper.showError(this, "Nenhuma anotação encontrada para esse livro!");
+    
     installRequested = false;
   }
   
@@ -95,7 +114,8 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
   protected void onDestroy() {
     if (session != null) {
       // Explicitly close ARCore Session to release native resources.
-      // Review the API reference for important considerations before calling close() in apps with
+      // Review the API reference for important considerations before calling close()
+      // in apps with
       // more complicated lifecycle requirements:
       // https://developers.google.com/ar/reference/java/arcore/reference/com/google/ar/core/Session#close()
       session.close();
@@ -119,7 +139,8 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
             break;
         }
         
-        // ARCore requires camera permissions to operate. If we did not yet obtain runtime
+        // ARCore requires camera permissions to operate. If we did not yet obtain
+        // runtime
         // permission on Android M and above, now is a good time to ask the user for it.
         if (!CameraPermissionHelper.hasCameraPermission(this)) {
           CameraPermissionHelper.requestCameraPermission(this);
@@ -129,16 +150,16 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
         session = new Session(/* context = */ this);
       } catch (UnavailableArcoreNotInstalledException |
                UnavailableUserDeclinedInstallationException e) {
-        message = "Please install ARCore";
+        message = "Por favor instale o ARCore.";
         exception = e;
       } catch (UnavailableApkTooOldException e) {
-        message = "Please update ARCore";
+        message = "Por favor atualize o ARCore.";
         exception = e;
       } catch (UnavailableSdkTooOldException e) {
-        message = "Please update this app";
+        message = "Por favor atualize este app.";
         exception = e;
       } catch (Exception e) {
-        message = "This device does not support AR";
+        message = "Este dispositivo não suporta AR.";
         exception = e;
       }
       
@@ -159,11 +180,12 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
       shouldConfigureSession = false;
     }
     
-    // Note that order matters - see the note in onPause(), the reverse applies here.
+    // Note that order matters - see the note in onPause(), the reverse applies
+    // here.
     try {
       session.resume();
     } catch (CameraNotAvailableException e) {
-      messageSnackBarHelper.showError(this, "Camera not available. Try restarting the app.");
+      messageSnackBarHelper.showError(this, "Câmera não está disponivel. Tente reiniciar o app!");
       session = null;
       return;
     }
@@ -177,8 +199,10 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
   public void onPause() {
     super.onPause();
     if (session != null) {
-      // Note that the order matters - GLSurfaceView is paused first so that it does not try
-      // to query the session. If Session is paused before GLSurfaceView, GLSurfaceView may
+      // Note that the order matters - GLSurfaceView is paused first so that it does
+      // not try
+      // to query the session. If Session is paused before GLSurfaceView,
+      // GLSurfaceView may
       // still call session.update() and get a SessionPausedException.
       displayRotationHelper.onPause();
       surfaceView.onPause();
@@ -209,11 +233,13 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
   public void onSurfaceCreated(GL10 gl, EGLConfig config) {
     GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     
-    // Prepare the rendering objects. This involves reading shaders, so may throw an IOException.
+    // Prepare the rendering objects. This involves reading shaders, so may throw an
+    // IOException.
     try {
-      // Create the texture and pass it to ARCore session to be filled during update().
-      backgroundRenderer.createOnGlThread(/*context=*/ this);
-      augmentedImageRenderer.createOnGlThreadPlane(/*context=*/ this, 2.0f, images);
+      // Create the texture and pass it to ARCore session to be filled during
+      // update().
+      backgroundRenderer.createOnGlThread(/* context= */ this);
+      augmentedImageRenderer.createOnGlThreadPlane(/* context= */ this, 2.0f, annotations);
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
     }
@@ -227,12 +253,15 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
   
   @Override
   public void onDrawFrame(GL10 gl) {
-    // Clear screen to notify driver it should not load any pixels from previous frame.
+    // Clear screen to notify driver it should not load any pixels from previous
+    // frame.
     GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
     
-    if (session == null) return;
+    if (session == null)
+      return;
     
-    // Notify ARCore session that the view size changed so that the perspective matrix and
+    // Notify ARCore session that the view size changed so that the perspective
+    // matrix and
     // the video background can be properly adjusted.
     displayRotationHelper.updateSessionIfNeeded(session);
     
@@ -240,12 +269,14 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
       session.setCameraTextureName(backgroundRenderer.getTextureId());
       
       // Obtain the current frame from ARSession. When the configuration is set to
-      // UpdateMode.BLOCKING (it is by default), this will throttle the rendering to the
+      // UpdateMode.BLOCKING (it is by default), this will throttle the rendering to
+      // the
       // camera framerate.
       Frame frame = session.update();
       Camera camera = frame.getCamera();
       
-      // Keep the screen unlocked while tracking, but allow it to lock when tracking stops.
+      // Keep the screen unlocked while tracking, but allow it to lock when tracking
+      // stops.
       trackingStateHelper.updateKeepScreenOnFlag(camera.getTrackingState());
       
       // If frame is ready, render camera preview image to the GL surface.
@@ -270,7 +301,7 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
   private void configureSession() throws IOException {
     Config config = new Config(session);
     config.setFocusMode(Config.FocusMode.AUTO);
-    if (!setupAugmentedImageDatabase(config, images)) {
+    if (!setupAugmentedImageDatabase(config, annotations)) {
       messageSnackBarHelper.showError(this, "Could not setup augmented image database");
     }
     session.configure(config);
@@ -283,7 +314,8 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
     for (AugmentedImage augmentedImage : updatedAugmentedImages) {
       switch (augmentedImage.getTrackingState()) {
         case PAUSED:
-          // When an image is in PAUSED state, but the camera is not PAUSED, it has been detected,
+          // When an image is in PAUSED state, but the camera is not PAUSED, it has been
+          // detected,
           // but not yet tracked.
           String text = String.format(Locale.getDefault(), "Detected Image %d", augmentedImage.getIndex());
           messageSnackBarHelper.showMessage(this, text);
@@ -323,8 +355,8 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
     }
   }
   
-  private boolean setupAugmentedImageDatabase(Config config, String[] images) {
-    CreateARImageDB createARImageDB = new CreateARImageDB(session, config, images);
+  private boolean setupAugmentedImageDatabase(Config config, List<Annotation> annotations) {
+    CreateARImageDB createARImageDB = new CreateARImageDB(session, config, annotations);
     createARImageDB.start();
     synchronized (createARImageDB) {
       try {

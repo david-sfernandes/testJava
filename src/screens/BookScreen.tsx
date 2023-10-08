@@ -4,7 +4,7 @@ import React from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import BackgroundImage from "../components/BgGradientient";
+import BackgroundImage from "../components/BgGradient";
 import BtnPrimary from "../components/BtnPrimary";
 import BtnSecondary from "../components/BtnSecondary";
 import { colors, fonts, spacing } from "../styles/base";
