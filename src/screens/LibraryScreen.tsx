@@ -3,10 +3,10 @@ import BaseView from "../components/BaseView";
 import BookList from "../components/BookList";
 import Filter from "../components/Filter";
 import SearchBar from "../components/SearchBar";
-import api from "../data/api";
+import books from "../data/books";
 
 export default function LibraryScreen() {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [bookList, setBookList] = useState<Book[]>([]);
   const options = [
     { text: "Todos", value: "ALL" },
     { text: "Lidos", value: "READED" },
@@ -15,9 +15,9 @@ export default function LibraryScreen() {
   ];
 
   useEffect(() => {
-    fetch(api.recomendations)
+    fetch(books.recomendations)
       .then((res) => res.json())
-      .then((res: ApiResponse) => setBooks(res.items))
+      .then((res: ApiResponse) => setBookList(res.items))
       .catch((err) => console.error(err));
   }, []);
 
@@ -25,7 +25,7 @@ export default function LibraryScreen() {
     <BaseView activeNav>
       <SearchBar />
       <Filter options={options} />
-      <BookList books={books} />
+      <BookList books={bookList} />
     </BaseView>
   );
 }

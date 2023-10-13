@@ -3,24 +3,24 @@ import React, { useEffect, useState } from "react";
 import BaseView from "../components/BaseView";
 import BookList from "../components/BookList";
 import SearchBar from "../components/SearchBar";
-import api from "../data/api";
+import books from "../data/books";
 
 type Props = NativeStackScreenProps<NavigationProps, "Search">;
 
 export default function SearchScreen({ route }: Props) {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [bookList, setBookList] = useState<Book[]>([]);
 
   useEffect(() => {
-    fetch(api.search(route.params.value))
+    fetch(books.search(route.params.value))
       .then((res) => res.json())
-      .then((res: ApiResponse) => setBooks(res.items))
+      .then((res: ApiResponse) => setBookList(res.items))
       .catch((err) => console.error(err));
   }, []);
 
   return (
     <BaseView activeNav>
       <SearchBar />
-      <BookList books={books} />
+      <BookList books={bookList} />
     </BaseView>
   );
 }

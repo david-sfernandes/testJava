@@ -29,8 +29,8 @@ type Book = {
     title: string;
     subtitle?: string;
     authors: string[];
-    publisher: string;
-    description: string;
+    publisher?: string;
+    description?: string;
     publishedDate: string;
     industryIdentifiers: {
       type: string;
@@ -42,11 +42,13 @@ type Book = {
     };
     pageCount: number;
     printType: string;
-    categories: string[];
+    categories?: string[];
     maturityRating: string;
     contentVersion: string;
     allowAnonLogging: boolean;
-    panelizationSummary: {
+    averageRating?: number;
+    ratingsCount?: number;
+    panelizationSummary?: {
       containsEpubBubbles: boolean;
       containsImageBubbles: boolean;
     };
@@ -54,31 +56,31 @@ type Book = {
       thumbnail: string;
       smallThumbnail: string;
     };
-    language: string;
+    language?: string;
     infoLink: string;
     previewLink: string;
     canonicalVolumeLink: string;
   };
-  layerInfo: {
+  layerInfo?: {
     layers: {
       layerId: string;
       volumeAnnotationsVersion: string;
     }[];
   };
   saleInfo: {
-    country: string;
-    isEbook: boolean;
-    saleability: string;
-    listPrice: {
+    country?: string;
+    isEbook?: boolean;
+    saleability?: string;
+    listPrice?: {
       amount: number;
       currencyCode: string;
     };
-    retailPrice: {
+    retailPrice?: {
       amount: number;
       currencyCode: string;
     };
-    buyLink: string;
-    offers: {
+    buyLink?: string;
+    offers?: {
       finskyOfferType: number;
       listPrice: {
         amountInMicros: number;
@@ -97,18 +99,19 @@ type Book = {
     embeddable: boolean;
     publicDomain: boolean;
     textToSpeechPermission: string;
-    epub: {
-      isAvailable: boolean;
-      acsTokenLink: string;
+    epub?: {
+      isAvailable?: boolean;
+      acsTokenLink?: string;
     };
     pdf: {
       isAvailable: boolean;
+      acsTokenLink?: string;
     };
     webReaderLink: string;
     accessViewStatus: string;
     quoteSharingAllowed: boolean;
   };
-  searchInfo: {
+  searchInfo?: {
     textSnippet: string;
   };
 };
@@ -129,3 +132,26 @@ type Author = {
   type: { key: string };
   author: { key: string };
 };
+
+interface User {
+  displayName: string;
+  email: string;
+  emailVerified: boolean;
+  isAnonymous: boolean;
+  phoneNumber: string | null;
+  photoURL: string | null;
+  providerId: string;
+  tenantId: string | null;
+  uid: string;
+}
+
+interface UserStore extends User {
+  setUser: (user: User) => void;
+  clearUser: () => void;
+}
+
+interface FileData {
+  fileName: string;
+  type: string;
+  uri: string;
+}

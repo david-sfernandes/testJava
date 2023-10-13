@@ -1,6 +1,6 @@
 const key = "AIzaSyDCgG9EV_EVc07xYFchVEaSSWV_jfGvm6g"
 
-const api = {
+const books = {
   search: (value: string) =>
     `https://www.googleapis.com/books/v1/volumes?q=${value}&key={key}`,
   searchByISBN: (value: string) =>
@@ -15,4 +15,4 @@ const api = {
     `https://www.googleapis.com/books/v1/users/112361005183718434273/bookshelves/1004/volumes`,
 };
 
-export default api;
+export default books;

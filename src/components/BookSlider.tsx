@@ -6,22 +6,24 @@ import Book from "./Book";
 export default function BookSlider({
   listUrl,
   title,
+  mockBooks = [],
 }: {
   listUrl: string;
   title: string;
+  mockBooks?: Book[];
 }) {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [books, setBooks] = useState<Book[]>(mockBooks);
 
   useEffect(() => {
-    fetch(listUrl)
-      .then((res) => res.json())
-      .then((res: ApiResponse) => {
-				console.log("RES: ", res)
-				setBooks(res.items)
-			})
-      .catch((err) => console.error(err));
+    if (mockBooks.length == 0) {
+      fetch(listUrl)
+        .then((res) => res.json())
+        .then((res: ApiResponse) => {
+          setBooks(res.items);
+        })
+        .catch((err) => console.error(err));
+    }
   }, []);
-	console.log("BOOKS: ", books)
 
   return (
     <View>
