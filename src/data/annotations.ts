@@ -1,6 +1,6 @@
 import { useUserStore } from "../store/userStore";
 
-const baseUrl = "http://192.168.0.3:8080/library";
+const baseUrl = "http://192.168.0.5:8080/library";
 const { email } = useUserStore();
 
 const addAnnotation = async (

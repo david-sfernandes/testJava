@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, VirtualizedList } from "react-native";
 import Book from "./Book";
 
 export default function BookList({ books }: { books: Book[] }) {
@@ -14,12 +14,11 @@ export default function BookList({ books }: { books: Book[] }) {
 
 const styles = StyleSheet.create({
   bookList: {
+    rowGap: 8,
     display: "flex",
     flexWrap: "wrap",
-    flexDirection: "row",
-    rowGap: 8,
-    width: "100%",
-    justifyContent: "center",
     paddingBottom: 100,
+    flexDirection: "row",
+    paddingHorizontal: 12,
   },
 });

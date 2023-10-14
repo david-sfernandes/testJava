@@ -51,7 +51,7 @@ export default function ImgForm({ isOpen, setOpen }) {
   };
 
   const openGallery = () => {
-    launchImageLibrary(options, (res) => {
+    launchImageLibrary({ ...options, mediaType: "photo" }, (res) => {
       setImage((res as CustomImgResponse).assets[0]);
     });
   };

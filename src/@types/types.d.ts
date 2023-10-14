@@ -5,6 +5,7 @@ type BtnProps = {
   icon?: string;
   disabled?: boolean;
   onPress: () => void;
+  flex?: boolean;
 };
 
 type Option = { text: string; value: string };
@@ -115,6 +116,24 @@ type Book = {
     textSnippet: string;
   };
 };
+
+// type for a book from database
+type BookDB = {
+  id: number;
+  userEmail: string;
+  isbn: string;
+  status: string;
+  book: {
+    id: number;
+    url: string;
+    isbn: string;
+    title: string;
+    cover: string;
+    author: string;
+    subtitle: string;
+  };
+};
+
 
 type NavigationProps = {
   AR: undefined;

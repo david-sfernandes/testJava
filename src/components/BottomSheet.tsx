@@ -16,11 +16,11 @@ import Animated, {
 
 import { colors, spacing } from "../styles/base";
 
-const HEIGHT = 300;
+// const HEIGHT = 300;
 const OVERDRAG = -20;
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export default function BottomSheet({ isOpen, setOpen, children }) {
+export default function BottomSheet({ isOpen, setOpen, children, height = 300 }) {
   const offset = useSharedValue(0);
   const toggleSheet = () => {
     setOpen(!isOpen);
@@ -35,10 +35,10 @@ export default function BottomSheet({ isOpen, setOpen, children }) {
       offset.value = offsetDelta > 0 ? offsetDelta : withSpring(clamp);
     })
     .onFinalize(() => {
-      if (offset.value < HEIGHT / 3) {
+      if (offset.value < height / 3) {
         offset.value = withSpring(0);
       } else {
-        offset.value = withTiming(HEIGHT, {}, () => {
+        offset.value = withTiming(height, {}, () => {
           runOnJS(toggleSheet)();
         });
       }
@@ -58,7 +58,7 @@ export default function BottomSheet({ isOpen, setOpen, children }) {
       />
       <GestureDetector gesture={pan}>
         <Animated.View
-          style={[styles.sheet, translateY]}
+          style={[styles.sheet, translateY, {height: height}]}
           entering={SlideInDown.springify().damping(15)}
           exiting={SlideOutDown}
         >
@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     backgroundColor: colors.darkGray,
 
-    height: HEIGHT,
     bottom: OVERDRAG * 1.1,
   },
   backdrop: {
