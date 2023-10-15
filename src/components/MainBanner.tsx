@@ -11,7 +11,7 @@ export default function MainBanner() {
     <View style={styles.container}>
       <ImageBackground
         source={{
-          uri: "https://i.pinimg.com/564x/5b/d9/37/5bd9374222f5929393b77fb48780c10c.jpg",
+          uri: "https://i0.wp.com/backgroundabstract.com/wp-content/uploads/edd/2022/01/gradient-grainy-texture_23-2148976749-e1656080022483.jpg?fit=626%2C417&ssl=1",
         }}
         imageStyle={{ borderRadius: 20 }}
       >

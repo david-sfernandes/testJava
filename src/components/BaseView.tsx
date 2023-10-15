@@ -31,6 +31,7 @@ export default function BaseView({
         <View style={styles.statusBarSpacer} />
         {activeHeader ? <Header /> : null}
         {children}
+        {activeNav && <View style={{ height: 100 }} />}
       </ScrollView>
       {activeNav ? <NavBar /> : null}
     </SafeAreaView>

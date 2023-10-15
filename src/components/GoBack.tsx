@@ -12,7 +12,7 @@ export default function GoBack() {
       <Icon
         name="chevron-left"
         solid
-        size={35}
+        size={30}
         color="white"
         style={styles.goBack}
       />
@@ -25,7 +25,10 @@ const styles = StyleSheet.create({
     top: 45,
     position: "absolute",
     left: spacing.lg - 6,
+    padding: 4,
     paddingHorizontal: 6,
     zIndex: 30,
+    borderWidth: 1,
+    borderColor: "transparent",
   },
 });

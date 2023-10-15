@@ -14,7 +14,6 @@ type CustomImgResponse = {
   assets: { uri: string; type: string; fileName: string }[];
 };
 
-// type for a books from google api
 type ApiResponse = {
   kind: string;
   items: Book[];
@@ -26,6 +25,7 @@ type Book = {
   kind: string;
   etag: string;
   selfLink: string;
+  status?: string;
   volumeInfo: {
     title: string;
     subtitle?: string;
@@ -117,7 +117,6 @@ type Book = {
   };
 };
 
-// type for a book from database
 type BookDB = {
   id: number;
   userEmail: string;
@@ -134,6 +133,19 @@ type BookDB = {
   };
 };
 
+type Annotation = {
+  id: number;
+  userEmail: string;
+  imgUrl: string;
+  annotationUrl: string;
+  bookIsbn: string;
+};
+
+type ARAnnotation = {
+  id: string;
+  text: string;
+  anchor: string;
+}
 
 type NavigationProps = {
   AR: undefined;
@@ -143,7 +155,7 @@ type NavigationProps = {
   Book: { book: Book };
   PictureForm: undefined;
   Search: { value: string };
-  Annotations: { book: Book };
+  Annotations: { libraryData: BookDB };
   navigate(arg0: string): unknown;
 };
 

@@ -6,6 +6,13 @@ import BtnPrimary from "./BtnPrimary";
 import BtnSecondary from "./BtnSecondary";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import Notification from "./Notification";
+import useAnnotations from "../data/useAnnotations";
+
+type ImgFormProps = {
+  isOpen: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  libraryData: BookDB;
+};
 
 const options = {
   title: "Selecione uma foto",
@@ -17,7 +24,11 @@ const options = {
   },
 };
 
-export default function ImgForm({ isOpen, setOpen }) {
+export default function ImgForm({
+  isOpen,
+  setOpen,
+  libraryData,
+}: ImgFormProps) {
   const MAX_CHARS = 240;
   const [text, setText] = useState("");
   const [textLength, setTextLength] = useState(0);
@@ -26,6 +37,7 @@ export default function ImgForm({ isOpen, setOpen }) {
   const [loading, setLoading] = useState(false);
   const [res, setRes] = useState<string>("");
   const [showError, setShowError] = useState(false);
+  const annotations = useAnnotations();
 
   const [showNotification, setShowNotification] = useState(false);
 
@@ -44,52 +56,49 @@ export default function ImgForm({ isOpen, setOpen }) {
     setIsTextValid(text.trim().length <= MAX_CHARS);
   };
 
-  const takePicture = () => {
-    launchCamera({ mediaType: "photo" }, (res) => {
-      setImage((res as CustomImgResponse).assets[0]);
-    });
+  const takePicture = async () => {
+    try {
+      const res = await launchCamera({ mediaType: "photo" });
+
+      // timeout to prevent app crash
+      setTimeout(() => {
+        console.log("# Res: ", res);
+        if (res.didCancel) return;
+        setImage((res as CustomImgResponse).assets[0]);
+      }, 500);
+    } catch (err) {
+      console.log("Error on take picture: ", err);
+    } finally {
+      console.log("Finally");
+    }
   };
 
   const openGallery = () => {
     launchImageLibrary({ ...options, mediaType: "photo" }, (res) => {
+      if (res.didCancel) return;
       setImage((res as CustomImgResponse).assets[0]);
     });
   };
 
   const sendData = async () => {
-    if (image) {
-      const data = new FormData();
+    if (!image) return;
+    setLoading(true);
 
-      // @ts-ignore: suppress param type
-      data.append("file", {
-        uri: image.uri,
-        type: image.type,
-        name: image.fileName,
-      });
-      setLoading(true);
+    annotations
+      .addAnnotation(text, libraryData.id, image)
+      .then((res) => {
+        console.log("Res: ", res);
+        setRes(res.message);
+        setLoading(false);
 
-      fetch("https://areader-ai-api-zkmzgms3ea-rj.a.run.app", {
-        method: "post",
-        body: data,
-        headers: {
-          "Content-Type": "multipart/form-data;",
-        },
+        setShowNotification(true);
+        setOpen(false);
       })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log("Res: ", res);
-          setRes(res.message);
-          setLoading(false);
-
-          setShowNotification(true);
-          setOpen(false);
-        })
-        .catch((err) => {
-          console.log("Err: ", err);
-          setLoading(false);
-          setShowError(true);
-        });
-    }
+      .catch((err) => {
+        console.log("Err: ", err);
+        setLoading(false);
+        setShowError(true);
+      });
   };
 
   return (

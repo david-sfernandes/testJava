@@ -4,12 +4,16 @@ import BookList from "../components/BookList";
 import Filter from "../components/Filter";
 import SearchBar from "../components/SearchBar";
 import useLibrary from "../data/useLibrary";
+import { StyleSheet, Text } from "react-native";
+import { fonts } from "../styles/base";
+import { useOptionStore } from "../store/optionStore";
 
 export default function LibraryScreen() {
   const [books, setBooks] = useState<Book[]>([]);
   const [userLibrary, setUserLibrary] = useState<BookDB[]>([]);
+  const { currentOption } = useOptionStore();
   const library = useLibrary();
-  console.log("Render");
+  
   const options = [
     { text: "Todos", value: "ALL" },
     { text: "Lidos", value: "READED" },
@@ -23,7 +27,7 @@ export default function LibraryScreen() {
       .then((res) => {
         console.log("User library: ", res);
         if (res.status != 400) {
-          setUserLibrary(res)
+          setUserLibrary(res);
         }
       })
       .catch((err) => console.log("Error on get books: ", err));
@@ -34,7 +38,8 @@ export default function LibraryScreen() {
       userLibrary.forEach(async (book) => {
         try {
           const res = await fetch(book.book.url);
-          const data = await res.json();
+          const data: Book = await res.json();
+          data.status = book.status;
           setBooks((prev) => [...prev, data]);
         } catch (err) {
           console.log("Error on fetch book: ", err);
@@ -48,7 +53,19 @@ export default function LibraryScreen() {
     <BaseView activeNav>
       <SearchBar />
       <Filter options={options} />
-      <BookList books={books} />
+      {books.length > 0 && <BookList books={books.filter(value => {
+        if (currentOption === "ALL") return true;
+        return value.status === currentOption;
+      })} />}
+      {books.length === 0 && (
+        <Text style={[fonts.default, styles.text]}>
+          Sua biblioteca está vazia.
+        </Text>
+      )}
     </BaseView>
   );
 }
+
+const styles = StyleSheet.create({
+  text: { textAlign: "center", marginTop: 10 },
+});

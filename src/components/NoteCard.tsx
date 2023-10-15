@@ -1,75 +1,29 @@
-import React from "react";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import { Shadow } from "react-native-shadow-2";
-import { dimensions, fonts, spacing } from "../styles/base";
-
-export default function NoteCard() {
-  return (
-    <View style={styles.container}>
-      <Shadow
-        style={styles.shadow}
-        startColor="rgba(0, 0, 0, 0.1)"
-        distance={6}
-      >
-        <ImageBackground
-          source={require("../assets/bgBlur.png")}
-          blurRadius={30}
-          style={styles.bg}
-        >
-          <View style={styles.navBar}>
-            <Text style={[fonts.default, styles.cardText]}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis,
-              omnis ut fugit, similique natus unde cum enim id assumenda beatae
-              totam!
-            </Text>
-            <Text style={[fonts.default, styles.pgCounter]}>pg. 5</Text>
-          </View>
-        </ImageBackground>
-      </Shadow>
-    </View>
-  );
-}
+import React, { useState } from "react";
+import { Image, StyleSheet } from "react-native";
+import { dimensions, spacing } from "../styles/base";
 
 const CARD_WIDTH = dimensions.fullWidth - 2 * spacing.md;
 
+export default function NoteCard({ annotation }: { annotation: Annotation }) {
+  const [aspectRatio, setAspectRatio] = useState(0);
+  Image.getSize(annotation.annotationUrl, (width, height) =>
+    setAspectRatio(width / height)
+  );
+
+  return (
+    <Image
+      source={{ uri: annotation.annotationUrl }}
+      resizeMode="contain"
+      width={CARD_WIDTH}
+      style={[styles.container, {aspectRatio: aspectRatio}]}
+    />
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    zIndex: 1,
-    borderRadius: 20,
-    width: CARD_WIDTH,
     marginTop: spacing.sm,
+    backgroundColor: "#fff",
     marginHorizontal: spacing.md,
-  },
-  shadow: {
-    flex: 1,
-    borderRadius: 20,
-    width: CARD_WIDTH,
-    overflow: "hidden",
-  },
-  bg: {
-    flex: 1,
-  },
-  navBar: {
-    flex: 1,
-    borderWidth: 1,
-    display: "flex",
-    borderRadius: 20,
-    width: CARD_WIDTH,
-    flexDirection: "column",
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderColor: "rgba(185, 185, 185, 0.2)",
-  },
-  cardText: {
-    flex: 1,
-    fontSize: 13,
-    width: "100%",
-    display: "flex",
-  },
-  pgCounter: {
-    textAlign: "right",
-    marginBottom: 0,
-    color: "#ffffffbb",
-  },
+  }
 });

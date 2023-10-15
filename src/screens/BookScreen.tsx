@@ -1,18 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import BackgroundImage from "../components/BgGradient";
+import BaseView from "../components/BaseView";
+import BookMainInfo from "../components/BookMainInfo";
 import BtnPrimary from "../components/BtnPrimary";
 import BtnSecondary from "../components/BtnSecondary";
-import { colors, fonts, spacing } from "../styles/base";
 import GoBack from "../components/GoBack";
+import OpenAR from "../components/OpenAR";
 import StatusForm from "../components/StatusForm";
+import useAnnotations from "../data/useAnnotations";
 import useLibrary from "../data/useLibrary";
-import Chip from "../components/Chip";
-import { Pressable } from "react-native";
+import { colors, fonts, spacing } from "../styles/base";
 
 type Props = NativeStackScreenProps<NavigationProps, "Book">;
 
@@ -33,112 +33,107 @@ export default function BookScreen({ route }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [isOnLibrary, setIsOnLibrary] = useState(false);
   const [libraryData, setLibraryData] = useState<BookDB>();
+  const [annotationList, setAnnotationList] = useState<ARAnnotation[]>([]);
   const library = useLibrary();
+  const annotations = useAnnotations();
+
+  const checkIfBookIsOnLibrary = async () => {
+    console.log("Checking library...");
+    library
+      .checkLibrary(isbn)
+      .then((res: BookDB) => {
+        setIsOnLibrary(Boolean(res.status));
+        setLibraryData(res);
+      })
+      .catch((err) => {
+        console.log("Error on check library: ", err);
+      });
+  };
 
   useEffect(() => {
-    const checkIfBookIsOnLibrary = async () => {
-      library
-        .checkLibrary(isbn)
-        .then((res: BookDB) => {
-          console.log("Is on library: ", res);
-          setIsOnLibrary(Boolean(res.status));
-          setLibraryData(res);
-        })
-        .catch((err) => {
-          console.log("Error on check library: ", err);
-        });
-    };
-
     checkIfBookIsOnLibrary();
+    annotations
+      .getAnnotationsByIsbn(isbn)
+      .then((res) => {
+        if (res.status >= 400) return;
+        const annotations = (res as Annotation[]).map((annotation) => ({
+          id: annotation.id.toString(),
+          anchor: annotation.imgUrl,
+          text: annotation.annotationUrl,
+        }));
+
+        setAnnotationList(annotations);
+      })
+      .catch((err) => {
+        console.log("Error on get annotations: ", err);
+      });
   }, []);
 
   return (
     <>
-      <SafeAreaView style={styles.screen}>
-        <BackgroundImage img={{ uri: book.volumeInfo.imageLinks?.thumbnail }} />
-        <ScrollView>
-          <GoBack />
-          <View style={styles.main}>
-            <View style={styles.container}>
-              <View style={{ flex: 1 }}>
-                <Text variant="headlineLarge" style={fonts.h1}>
-                  {book.volumeInfo.title}
-                </Text>
-                {book.volumeInfo.subtitle && (
-                  <Text style={[fonts.h4, styles.subtitle]}>
-                    {book.volumeInfo.subtitle}
-                  </Text>
-                )}
-                <View style={styles.middleInfo}>
-                  <Text variant="headlineSmall" style={[fonts.h4, { flex: 1 }]}>
-                    {book.volumeInfo.authors[0]}
-                  </Text>
-                  <Text
-                    style={[fonts.default, styles.subtitle]}
-                    variant="bodySmall"
-                  >
-                    pgs. {book.volumeInfo.pageCount}
-                  </Text>
-                </View>
-              </View>
-              {libraryData && (
-                <Pressable
-                  style={styles.status}
-                  onPress={() => setShowModal(true)}
-                >
-                  <Text>{options[libraryData.status]}</Text>
-                </Pressable>
-              )}
-            </View>
-            <View style={styles.btnBox}>
-              {isOnLibrary ? (
-                <>
-                  <BtnSecondary
-                    flex
-                    text="Anotaçôes"
-                    icon="sticker-text"
+      <BaseView img={{ uri: book.volumeInfo.imageLinks?.thumbnail }}>
+        <GoBack />
+        <View style={styles.main}>
+          <View style={styles.container}>
+            {libraryData && (
+              <Pressable
+                style={styles.status}
+                onPress={() => setShowModal(true)}
+              >
+                <Text style={{fontSize: 12}}>{options[libraryData.status]}</Text>
+              </Pressable>
+            )}
+            <BookMainInfo book={book} />
+          </View>
+          <View style={styles.btnBox}>
+            {isOnLibrary ? (
+              <>
+                <BtnSecondary
+                  flex
+                  text="Anotaçôes"
+                  icon="sticker-text"
+                  onPress={() =>
                     // @ts-ignore: suppress param type
-                    onPress={() => navigation.navigate("Annotations", { book })}
-                  />
+                    navigation.navigate("Annotations", { libraryData })
+                  }
+                />
+                {annotationList.length > 0 && (
                   <BtnPrimary
                     flex
                     text="Ver"
                     icon="camera"
-                    // @ts-ignore: suppress param type
-                    onPress={() => navigation.navigate("AR")}
+                    onPress={() => OpenAR(annotationList)}
                   />
-                </>
-              ) : (
-                <BtnPrimary
-                  flex
-                  text="Adicionar"
-                  icon="plus"
-                  onPress={() => {
-                    library.addBook(isbn).then((res) => {
-                      console.log(`Add book(${isbn}): `, res);
-                      setIsOnLibrary(true);
-                    });
-                  }}
-                />
-              )}
-            </View>
+                )}
+              </>
+            ) : (
+              <BtnPrimary
+                flex
+                text="Adicionar"
+                icon="plus"
+                onPress={() =>
+                  library.addBook(isbn).then(() => setIsOnLibrary(true))
+                }
+              />
+            )}
           </View>
-          <View style={styles.descriptionContainer}>
-            <Text style={[fonts.h3, styles.description]}>Descrição</Text>
-            <Text
-              style={[fonts.default, { textAlign: "justify" }]}
-              variant="bodySmall"
-            >
-              {book.volumeInfo.description || "Descrição não está disponível"}
-            </Text>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-      {showModal && libraryData && (
+        </View>
+        <View style={styles.descriptionContainer}>
+          <Text style={[fonts.h3, styles.description]}>Descrição</Text>
+          <Text
+            style={[fonts.default, { textAlign: "justify" }]}
+            variant="bodySmall"
+          >
+            {book.volumeInfo.description || "Não há descrição disponível"}
+          </Text>
+        </View>
+      </BaseView>
+      {showModal && (
         <StatusForm
           isOpen={showModal}
           setOpen={setShowModal}
           libraryData={libraryData}
+          callback={checkIfBookIsOnLibrary}
         />
       )}
     </>
@@ -166,17 +161,10 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   description: { marginTop: spacing.md, marginBottom: spacing.xs },
-  subtitle: { color: "#ffffffaa", fontWeight: "normal", marginTop: 10 },
   container: {
     display: "flex",
-    flexDirection: "row",
-  },
-  middleInfo: {
-    display: "flex",
-    flexDirection: "row",
-    alignContent: "space-between",
-    alignItems: "center",
-    width: "100%",
+    flexDirection: "column",
+    alignItems: "flex-start",
   },
   goBack: {
     position: "absolute",
@@ -184,14 +172,13 @@ const styles = StyleSheet.create({
     left: spacing.lg,
   },
   status: {
-    backgroundColor: "#ffffffcc",
+    backgroundColor: "#ffffffdd",
     color: "black",
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "white",
     paddingVertical: 5,
     paddingHorizontal: 10,
-    position: "absolute",
-    right: 0,
+    marginBottom: 10,
   },
 });

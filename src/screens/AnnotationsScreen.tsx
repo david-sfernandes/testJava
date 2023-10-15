@@ -1,38 +1,54 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import BaseView from "../components/BaseView";
 import ImgForm from "../components/ImgForm";
 import NoteCard from "../components/NoteCard";
-import { colors, fonts, spacing } from "../styles/base";
+import { colors, dimensions, fonts, spacing } from "../styles/base";
+import useAnnotations from "../data/useAnnotations";
 
 const AddNote = ({ onClick }: { onClick: () => void }) => {
   return (
     <View style={{ backgroundColor: "black" }}>
       <Pressable style={styles.addNote} onPress={() => onClick()}>
-        <Icon name="plus" solid size={20} color="black" />
+        <Icon name="plus" solid size={12} color="black" />
         <Text style={styles.addNoteText}>Adicionar</Text>
       </Pressable>
     </View>
   );
 };
 
-type Props = NativeStackScreenProps<NavigationProps, "Book">;
+type Props = NativeStackScreenProps<NavigationProps, "Annotations">;
 
 export default function AnnotationsScreen({ route }: Props) {
-  const { book } = route.params;
-  const mock = new Array(15).fill(0);
+  const { libraryData } = route.params;
   const [isOpen, setIsOpen] = useState(false);
   const toggleModal = () => setIsOpen(!isOpen);
+  const annotations = useAnnotations();
+  const [annotationList, setAnnotationList] = useState<Annotation[]>([]);
+  console.log("ISBN: ", libraryData.isbn);
+
+  useEffect(() => {
+    annotations
+      .getAnnotationsByIsbn(libraryData.isbn)
+      .then((res) => {
+        if (res.status >= 400) return;
+        console.log("Annotations: ", res);
+        setAnnotationList(res);
+      })
+      .catch((err) => {
+        console.log("Error on get annotations: ", err);
+      });
+  }, []);
 
   return (
     <>
-      <BaseView img={{ uri: book.volumeInfo.imageLinks?.thumbnail }}>
+      <BaseView img={{ uri: libraryData.book.cover }}>
         <View style={styles.main}>
-          <Text style={fonts.h1}>{book.volumeInfo.title}</Text>
+          <Text style={fonts.h1}>{libraryData.book.title}</Text>
           <Text style={[fonts.h3, styles.author]}>
-            {book.volumeInfo.authors[0]}
+            {libraryData.book.author}
           </Text>
           <View
             style={{
@@ -43,7 +59,7 @@ export default function AnnotationsScreen({ route }: Props) {
             }}
           >
             <Text style={{ ...fonts.h4, color: "#eeeeeecc" }}>
-              Anotações: 15
+              Anotações: {annotationList.length}
             </Text>
             <Icon name="eye" solid size={25} color="white" />
           </View>
@@ -51,19 +67,24 @@ export default function AnnotationsScreen({ route }: Props) {
         <View
           style={{
             marginBottom: 50,
-            display: "flex",
-            justifyContent: "center",
-            alignContent: "center",
             width: "100%",
+            height: "100%",
+            minHeight: dimensions.fullHeight,
           }}
         >
-          {mock.map((_, i) => (
-            <NoteCard key={i} />
+          {annotationList.map((annotation) => (
+            <NoteCard key={annotation.id} annotation={annotation} />
           ))}
         </View>
       </BaseView>
       <AddNote onClick={toggleModal} />
-      {isOpen && <ImgForm isOpen={isOpen} setOpen={setIsOpen} />}
+      {isOpen && (
+        <ImgForm
+          isOpen={isOpen}
+          setOpen={setIsOpen}
+          libraryData={libraryData}
+        />
+      )}
     </>
   );
 }
