@@ -1,4 +1,14 @@
 {
   "name": "testJava",
-  "displayName": "testJava"
+  "displayName": "testJava",
+  "expo": {
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow AReader to access your camera."
+        }
+      ]
+    ]
+  }
 }

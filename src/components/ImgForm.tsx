@@ -1,12 +1,13 @@
+import { CameraCapturedPicture } from "expo-camera";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, View } from "react-native";
-import BottomSheet from "../components/BottomSheet";
+import useAnnotations from "../data/useAnnotations";
 import { colors } from "../styles/base";
+import BottomSheet from "./BottomSheet";
 import BtnPrimary from "./BtnPrimary";
 import BtnSecondary from "./BtnSecondary";
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import CameraLaucher from "./CameraLaucher";
 import Notification from "./Notification";
-import useAnnotations from "../data/useAnnotations";
 
 type ImgFormProps = {
   isOpen: boolean;
@@ -38,14 +39,11 @@ export default function ImgForm({
   const [res, setRes] = useState<string>("");
   const [showError, setShowError] = useState(false);
   const annotations = useAnnotations();
+  const [showCamera, setShowCamera] = useState(false);
 
   const [showNotification, setShowNotification] = useState(false);
 
-  const [image, setImage] = useState<{
-    uri: string;
-    type: string;
-    fileName: string;
-  }>();
+  const [image, setImage] = useState<CameraCapturedPicture>();
 
   const onFocusStyle = { borderColor: onFocus ? colors.gray : "#ffffff80" };
   const onTextLengthStyle = { color: isTextValid ? colors.gray : colors.red };
@@ -54,30 +52,6 @@ export default function ImgForm({
     setText(text);
     setTextLength(text.trim().length);
     setIsTextValid(text.trim().length <= MAX_CHARS);
-  };
-
-  const takePicture = async () => {
-    try {
-      const res = await launchCamera({ mediaType: "photo" });
-
-      // timeout to prevent app crash
-      setTimeout(() => {
-        console.log("# Res: ", res);
-        if (res.didCancel) return;
-        setImage((res as CustomImgResponse).assets[0]);
-      }, 500);
-    } catch (err) {
-      console.log("Error on take picture: ", err);
-    } finally {
-      console.log("Finally");
-    }
-  };
-
-  const openGallery = () => {
-    launchImageLibrary({ ...options, mediaType: "photo" }, (res) => {
-      if (res.didCancel) return;
-      setImage((res as CustomImgResponse).assets[0]);
-    });
   };
 
   const sendData = async () => {
@@ -102,67 +76,72 @@ export default function ImgForm({
   };
 
   return (
-    <BottomSheet isOpen={isOpen} setOpen={setOpen}>
-      <View style={styles.flexContainer}>
-        {image?.uri && (
-          <Image source={{ uri: image.uri }} style={styles.smallImg} />
-        )}
-        <View style={styles.btnContainer}>
-          <BtnPrimary
-            onPress={takePicture}
-            text="Tirar foto"
-            icon="camera"
-            disabled={loading}
-          />
-          <BtnSecondary
-            onPress={openGallery}
-            text="Abrir galeria"
-            icon="image-outline"
-            disabled={loading}
-          />
+    <>
+      <BottomSheet isOpen={isOpen} setOpen={setOpen}>
+        <View style={styles.flexContainer}>
+          {image?.uri && (
+            <Image source={{ uri: image.uri }} style={styles.smallImg} />
+          )}
+          <View style={styles.btnContainer}>
+            <BtnPrimary
+              onPress={() => setShowCamera(true)}
+              text="Tirar foto"
+              icon="camera"
+              disabled={loading}
+            />
+            <BtnSecondary
+              onPress={() => {}}
+              text="Abrir galeria"
+              icon="image-outline"
+              disabled={loading}
+            />
+          </View>
         </View>
-      </View>
-      <View style={styles.textInputContainer}>
-        <TextInput
-          value={text}
-          multiline={true}
-          style={[styles.input, onFocusStyle]}
-          onFocus={() => setOnFocus(true)}
-          onBlur={() => setOnFocus(false)}
-          placeholder="Digite sua anotação..."
-          onChangeText={(text) => handleTextChange(text)}
-          placeholderTextColor={colors.semiTransparent}
-          textAlignVertical="top"
-          keyboardType="default"
-          textBreakStrategy="simple"
+        <View style={styles.textInputContainer}>
+          <TextInput
+            value={text}
+            multiline={true}
+            style={[styles.input, onFocusStyle]}
+            onFocus={() => setOnFocus(true)}
+            onBlur={() => setOnFocus(false)}
+            placeholder="Digite sua anotação..."
+            onChangeText={(text) => handleTextChange(text)}
+            placeholderTextColor={colors.semiTransparent}
+            textAlignVertical="top"
+            keyboardType="default"
+            textBreakStrategy="simple"
+          />
+          <Text style={[styles.charCont, onTextLengthStyle]}>
+            {textLength}/{MAX_CHARS}
+          </Text>
+        </View>
+        <BtnPrimary
+          onPress={() => sendData()}
+          text={loading ? "Enviando..." : "Salvar"}
+          disabled={loading || !isTextValid || !image}
         />
-        <Text style={[styles.charCont, onTextLengthStyle]}>
-          {textLength}/{MAX_CHARS}
-        </Text>
-      </View>
-      <BtnPrimary
-        onPress={() => sendData()}
-        text={loading ? "Enviando..." : "Salvar"}
-        disabled={loading || !isTextValid || !image}
-      />
 
-      <Notification
-        visible={showNotification}
-        setVisible={setShowNotification}
-        icon={res == "valid" ? "check" : "exclamation-triangle"}
-        text={
-          res == "valid"
-            ? "Sua anotação foi salva"
-            : "Imagem invalida. Tente usar outra!"
-        }
-      />
-      <Notification
-        visible={showError}
-        setVisible={setShowError}
-        icon="times"
-        text="Erro ao enviar sua anotação. Tente novamente!"
-      />
-    </BottomSheet>
+        <Notification
+          visible={showNotification}
+          setVisible={setShowNotification}
+          icon={res == "valid" ? "check" : "exclamation-triangle"}
+          text={
+            res == "valid"
+              ? "Sua anotação foi salva"
+              : "Imagem invalida. Tente usar outra!"
+          }
+        />
+        <Notification
+          visible={showError}
+          setVisible={setShowError}
+          icon="times"
+          text="Erro ao enviar sua anotação. Tente novamente!"
+        />
+      </BottomSheet>
+      {showCamera && (
+        <CameraLaucher setImage={setImage} setShowCamera={setShowCamera} />
+      )}
+    </>
   );
 }
 

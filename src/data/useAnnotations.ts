@@ -1,3 +1,4 @@
+import { CameraCapturedPicture } from "expo-camera";
 import { useUserStore } from "../store/userStore";
 
 const useAnnotations = () => {
@@ -7,15 +8,15 @@ const useAnnotations = () => {
   const addAnnotation = async (
     annotation: string,
     bookId: number,
-    image: FileData
+    image: CameraCapturedPicture
   ) => {
     const formData = new FormData();
 
     // @ts-ignore: suppress param type
     formData.append("file", {
       uri: image.uri,
-      name: image.fileName,
-      type: image.type,
+      name: image.uri,
+      type: image.exif?.MediaType,
     });
     formData.append("text", annotation);
     formData.append("libraryBookId", bookId.toString());
