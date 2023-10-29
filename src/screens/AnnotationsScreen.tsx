@@ -6,7 +6,7 @@ import BaseView from "../components/BaseView";
 import ImgForm from "../components/ImgForm";
 import NoteCard from "../components/NoteCard";
 import { colors, dimensions, fonts, spacing } from "../styles/base";
-import useAnnotations from "../data/useAnnotations";
+import useAnnotations from "../hooks/useAnnotations";
 
 const AddNote = ({ onClick }: { onClick: () => void }) => {
   return (

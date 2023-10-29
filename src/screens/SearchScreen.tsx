@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import BaseView from "../components/BaseView";
 import BookList from "../components/BookList";
 import SearchBar from "../components/SearchBar";
-import books from "../data/books";
+import useBooks from "../hooks/useBooks";
 
 type Props = NativeStackScreenProps<NavigationProps, "Search">;
 
 export default function SearchScreen({ route }: Props) {
   const [bookList, setBookList] = useState<Book[]>([]);
+  const books = useBooks();
 
   useEffect(() => {
     fetch(books.search(route.params.value))

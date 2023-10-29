@@ -2,18 +2,24 @@ import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { colors, fonts } from "../styles/base";
 
-export default function GroupCard({ img }: { img: string }) {
+type GroupCardProps = {
+  img: string;
+  members: number;
+  name: string;
+  author: string;
+};
+
+export default function GroupCard({ img, members, name, author }: GroupCardProps) {
   return (
     <View style={styles.card}>
       <Image
-        source={{
-          uri: img,
-        }}
+        source={{ uri: img}}
         style={styles.cardImg}
       />
       <View style={styles.textBox}>
-        <Text style={fonts.h3}>GroupCard</Text>
-        <Text style={fonts.default}>Membros: 10</Text>
+        <Text style={fonts.h3}>{name}</Text>
+        <Text style={fonts.default}>Membros: {members}</Text>
+        <Text style={[fonts.default, {color: "#ffffffaa"}]}>Autor: {author}</Text>
       </View>
     </View>
   );
@@ -30,10 +36,10 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   cardImg: {
-    width: 100,
+    width: 70,
     height: 100,
-    borderRadius: 50,
     borderWidth: 1,
+    borderRadius: 5,
     borderColor: colors.semiTransparent,
   },
   textBox: {

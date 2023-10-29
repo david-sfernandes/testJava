@@ -186,3 +186,12 @@ interface FileData {
   type: string;
   uri: string;
 }
+
+type Group = {
+  id: number;
+  password: string;
+  owner: string;
+  libraryBook: BookDB;
+  members: string[];
+  annotations: Annotation[];
+};

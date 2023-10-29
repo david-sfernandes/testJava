@@ -2,7 +2,7 @@ import { CameraCapturedPicture } from "expo-camera";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
-import useAnnotations from "../data/useAnnotations";
+import useAnnotations from "../hooks/useAnnotations";
 import { colors } from "../styles/base";
 import BottomSheet from "./BottomSheet";
 import BtnPrimary from "./BtnPrimary";
