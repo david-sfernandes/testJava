@@ -11,7 +11,7 @@ const useGroups = () => {
       method: "POST",
       headers: baseHeaders(),
     };
-    const res: Group = await fetch(
+    const res = await fetch(
       `${url}/create?libraryBookId=${bookId}&password=${password}`,
       options
     ).then((res) => res.json());
@@ -22,14 +22,24 @@ const useGroups = () => {
 
   const leave = async () => {};
 
-  const join = async () => {};
+  const join = async (idGroup: number, password: string) => {
+    const options = {
+      method: "PATCH",
+      headers: baseHeaders(),
+    };
+    const res = await fetch(
+      `${url}/join?idGroup=${idGroup}&password=${password}&userEmail=${email}`,
+      options
+    ).then((res) => res.json());
+    return res;
+  };
 
   const addAnnotation = async () => {};
 
-  const getByOwner = async () => {
+  const getByOwner = async (ownerEmail?: string) => {
     const options = { headers: baseHeaders() };
     console.log("email: ", email);
-    const res = await fetch(`${url}/owner/${email}`, options).then(
+    const res = await fetch(`${url}/owner/${ownerEmail || email}`, options).then(
       (res) => res.json()
     );
     return res;

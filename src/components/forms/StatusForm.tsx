@@ -1,9 +1,8 @@
-import { Pressable, StyleSheet } from "react-native";
-import BottomSheet from "./BottomSheet";
-import React, { useState } from "react";
-import { Text } from "react-native";
-import { colors, fonts } from "../styles/base";
-import useLibrary from "../hooks/useLibrary";
+import React from "react";
+import { Pressable, StyleSheet, Text } from "react-native";
+import useLibrary from "../../hooks/useLibrary";
+import { colors, fonts } from "../../styles/base";
+import BottomSheet from "../BottomSheet";
 
 type StatusFormProps = {
   isOpen: boolean;

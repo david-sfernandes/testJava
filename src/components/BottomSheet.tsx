@@ -71,7 +71,7 @@ export default function BottomSheet({ isOpen, setOpen, children, height = 300 })
 
 const styles = StyleSheet.create({
   sheet: {
-    zIndex: 1,
+    zIndex: 40,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
     width: "100%",

@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 15,
     borderTopStartRadius: 15,
     overflow: "hidden",
+    zIndex: 10,
   },
   shadow: {
     overflow: "hidden",

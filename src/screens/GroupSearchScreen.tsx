@@ -1,35 +1,26 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import BaseView from "../components/BaseView";
-import BtnPrimary from "../components/BtnPrimary";
+import BtnSecondary from "../components/BtnSecondary";
 import GroupCard from "../components/GroupCard";
-import CreateGroupForm from "../components/forms/CreateGroupForm";
+import EnterGroupForm from "../components/forms/EnterGroupForm";
 import useGroups from "../hooks/useGroups";
 import { dimensions, fonts } from "../styles/base";
-import BtnSecondary from "../components/BtnSecondary";
-import { useNavigation } from "@react-navigation/native";
 import SearchGroup from "../components/SearchGroup";
 
-export default function GroupsScreen() {
-  const [groupsMember, setGroupsMember] = useState<Group[]>([]);
+type Props = NativeStackScreenProps<NavigationProps, "GroupSearch">;
+
+export default function GroupSearchScreen({ route }: Props) {
+  const owner = route.params.owner;
   const [groupsOwner, setGroupsOwner] = useState<Group[]>([]);
   const groupsAPI = useGroups();
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     groupsAPI
-      .getByMembers()
-      .then((res) => {
-        if (res.status == 400) return;
-        setGroupsMember(res);
-      })
-      .catch((err) => console.log("Error on get groups (Members): ", err));
-  }, []);
-
-  useEffect(() => {
-    groupsAPI
-      .getByOwner()
+      .getByOwner(owner)
       .then((res) => {
         if (res.status == 400) return;
         setGroupsOwner(res);
@@ -37,12 +28,9 @@ export default function GroupsScreen() {
       .catch((err) => console.log("Error on get groups (Owner): ", err));
   }, [showModal]);
 
-  
-
   return (
     <>
       <BaseView
-        activeNav
         img={{
           uri: "https://i.pinimg.com/564x/1d/66/8b/1d668b02c6a5e1bf7d452296cb14ab8f.jpg",
         }}
@@ -53,38 +41,21 @@ export default function GroupsScreen() {
           }}
         >
           <View style={styles.headerContainer}>
-            <Text style={[fonts.h2]}>Grupos</Text>
-            <BtnPrimary
-              text="Criar grupo"
-              icon="plus"
-              onPress={() => setShowModal(true)}
-            />
+            <Text style={[fonts.h2]}>Busca por grupos</Text>
           </View>
           <SearchGroup />
-          {groupsOwner.length == 0 && groupsMember.length == 0 && (
+          {groupsOwner.length == 0 && (
             <Text style={styles.sectionTitle}>
-              Você não está em nenhum grupo
+              Você encontramos nenhum grupo criado por {owner}
             </Text>
           )}
           {groupsOwner.length > 0 && (
-            <Text style={styles.sectionTitle}>Grupos que você criou</Text>
+            <Text style={styles.sectionTitle}>Grupos criados por {owner}</Text>
           )}
           {groupsOwner.map((group) => (
             <GroupCard
               id={group.id}
-              img={group.libraryBook.book.cover}
-              author={group.owner}
-              members={group.members.length + 1}
-              name={group.libraryBook.book.title}
-              key={group.id + group.libraryBook.book.title}
-            />
-          ))}
-          {groupsMember.length > 0 && (
-            <Text style={styles.sectionTitle}>Grupos que você participa</Text>
-          )}
-          {groupsMember.map((group) => (
-            <GroupCard
-              id={group.id}
+              onPress={() => setShowModal(true)}
               img={group.libraryBook.book.cover}
               author={group.owner}
               members={group.members.length + 1}
@@ -95,7 +66,7 @@ export default function GroupsScreen() {
         </View>
       </BaseView>
       {showModal && (
-        <CreateGroupForm setOpen={setShowModal} isOpen={showModal} />
+        <EnterGroupForm setOpen={setShowModal} isOpen={showModal} />
       )}
     </>
   );
@@ -126,6 +97,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     height: 35,
     fontSize: 13,
-    color: "black"
+    color: "black",
   },
 });

@@ -26,7 +26,7 @@ export default function BaseView({
   return (
     <SafeAreaView style={styles.screen}>
       <StatusBar animated={true} backgroundColor="#ffffff00" translucent />
-      <ScrollView>
+      <ScrollView style={styles.scroll}>
         {img && <BgGradient img={img} />}
         <View style={styles.statusBarSpacer} />
         {activeHeader ? <Header /> : null}
@@ -38,14 +38,19 @@ export default function BaseView({
   );
 }
 
+const HEIGHT = dimensions.fullHeight + 2 * (StatusBar.currentHeight || 0);
+
 const styles = StyleSheet.create({
   screen: {
     position: "relative",
     backgroundColor: colors.black,
-    height: dimensions.fullHeight + 2 * (StatusBar.currentHeight || 0),
+    height: HEIGHT,
     marginTop: StatusBar.currentHeight ? -1 * StatusBar.currentHeight : 0,
   },
   statusBarSpacer: {
     paddingBottom: 2 * (StatusBar.currentHeight || 0),
+  },
+  scroll: {
+    flex: 1,
   },
 });

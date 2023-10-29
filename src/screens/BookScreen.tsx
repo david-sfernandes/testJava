@@ -9,7 +9,7 @@ import BtnPrimary from "../components/BtnPrimary";
 import BtnSecondary from "../components/BtnSecondary";
 import GoBack from "../components/GoBack";
 import OpenAR from "../components/OpenAR";
-import StatusForm from "../components/StatusForm";
+import StatusForm from "../components/forms/StatusForm";
 import { colors, fonts, spacing } from "../styles/base";
 import useLibrary from "../hooks/useLibrary";
 import useAnnotations from "../hooks/useAnnotations";

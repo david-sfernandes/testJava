@@ -1,17 +1,25 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors, fonts } from "../styles/base";
+import { useGroupBook } from "../store/groupBook";
 
 type GroupCardProps = {
+  id: number;
   img: string;
   members: number;
   name: string;
   author: string;
+  allowEnter?: boolean;
+  onPress?: () => void;
 };
 
-export default function GroupCard({ img, members, name, author }: GroupCardProps) {
+export default function GroupCard({ img, members, name, author, id, onPress }: GroupCardProps) {
+  const { setGroupId } = useGroupBook();
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => {
+      setGroupId(id);
+      onPress && onPress();
+    }}>
       <Image
         source={{ uri: img}}
         style={styles.cardImg}
@@ -21,7 +29,7 @@ export default function GroupCard({ img, members, name, author }: GroupCardProps
         <Text style={fonts.default}>Membros: {members}</Text>
         <Text style={[fonts.default, {color: "#ffffffaa"}]}>Autor: {author}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

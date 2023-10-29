@@ -145,7 +145,7 @@ type ARAnnotation = {
   id: string;
   text: string;
   anchor: string;
-}
+};
 
 type NavigationProps = {
   AR: undefined;
@@ -156,6 +156,7 @@ type NavigationProps = {
   PictureForm: undefined;
   Search: { value: string };
   Annotations: { libraryData: BookDB };
+  GroupSearch: { owner: string };
   navigate(arg0: string): unknown;
 };
 
