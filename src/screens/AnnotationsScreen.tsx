@@ -27,7 +27,6 @@ export default function AnnotationsScreen({ route }: Props) {
   const toggleModal = () => setIsOpen(!isOpen);
   const annotations = useAnnotations();
   const [annotationList, setAnnotationList] = useState<Annotation[]>([]);
-  console.log("ISBN: ", libraryData.isbn);
 
   useEffect(() => {
     annotations
@@ -40,7 +39,7 @@ export default function AnnotationsScreen({ route }: Props) {
       .catch((err) => {
         console.log("Error on get annotations: ", err);
       });
-  }, []);
+  }, [isOpen]);
 
   return (
     <>

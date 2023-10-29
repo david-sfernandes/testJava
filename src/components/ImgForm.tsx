@@ -1,6 +1,7 @@
 import { CameraCapturedPicture } from "expo-camera";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, View } from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
 import useAnnotations from "../data/useAnnotations";
 import { colors } from "../styles/base";
 import BottomSheet from "./BottomSheet";
@@ -31,19 +32,18 @@ export default function ImgForm({
   libraryData,
 }: ImgFormProps) {
   const MAX_CHARS = 240;
+  const [res, setRes] = useState("");
   const [text, setText] = useState("");
-  const [textLength, setTextLength] = useState(0);
   const [onFocus, setOnFocus] = useState(false);
-  const [isTextValid, setIsTextValid] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [res, setRes] = useState<string>("");
+  const [textLength, setTextLength] = useState(0);
   const [showError, setShowError] = useState(false);
-  const annotations = useAnnotations();
   const [showCamera, setShowCamera] = useState(false);
-
-  const [showNotification, setShowNotification] = useState(false);
-
+  const [isTextValid, setIsTextValid] = useState(true);
   const [image, setImage] = useState<CameraCapturedPicture>();
+  const [showNotification, setShowNotification] = useState(false);
+  
+  const annotations = useAnnotations();
 
   const onFocusStyle = { borderColor: onFocus ? colors.gray : "#ffffff80" };
   const onTextLengthStyle = { color: isTextValid ? colors.gray : colors.red };
@@ -52,6 +52,19 @@ export default function ImgForm({
     setText(text);
     setTextLength(text.trim().length);
     setIsTextValid(text.trim().length <= MAX_CHARS);
+  };
+
+  const openGallery = () => {
+    launchImageLibrary({ ...options, mediaType: "photo" }, (res) => {
+      if (res.didCancel || !res.assets) return;
+      const image: CameraCapturedPicture = {
+        width: res.assets[0].width ?? 0,
+        height: res.assets[0].height ?? 0,
+        uri: res.assets[0].uri ?? "",
+        exif: { MediaType: res.assets[0].type },
+      };
+      setImage(image);
+    });
   };
 
   const sendData = async () => {
@@ -78,7 +91,7 @@ export default function ImgForm({
   return (
     <>
       <BottomSheet isOpen={isOpen} setOpen={setOpen}>
-        <View style={styles.flexContainer}>
+        <View style={styles.container}>
           {image?.uri && (
             <Image source={{ uri: image.uri }} style={styles.smallImg} />
           )}
@@ -90,7 +103,7 @@ export default function ImgForm({
               disabled={loading}
             />
             <BtnSecondary
-              onPress={() => {}}
+              onPress={() => openGallery()}
               text="Abrir galeria"
               icon="image-outline"
               disabled={loading}
@@ -146,7 +159,7 @@ export default function ImgForm({
 }
 
 const styles = StyleSheet.create({
-  flexContainer: {
+  container: {
     gap: 20,
     display: "flex",
     flexDirection: "row",
