@@ -59,6 +59,7 @@ const useAnnotations = () => {
     });
     return await response.json();
   };
+  
   return {
     addAnnotation,
     getAnnotations,

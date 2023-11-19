@@ -1,21 +1,19 @@
 import auth from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import BaseView from "../components/BaseView";
 import BtnPrimary from "../components/BtnPrimary";
 import { useUserStore } from "../store/userStore";
 import { dimensions, fonts } from "../styles/base";
-import BtnSecondary from "../components/BtnSecondary";
 
 export default function AuthScreen() {
   const [initializing, setInitializing] = useState(true);
-  const { setUser, clearUser, displayName, email } = useUserStore();
-  auth().onAuthStateChanged(onAuthStateChanged);
+  const { setUser, email } = useUserStore();
   const navigation = useNavigation<NavigationProps>();
 
-  async function onGoogleButtonPress() {
+  const onGoogleButtonPress = async () => {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
     const { idToken } = await GoogleSignin.signIn();
 
@@ -23,9 +21,10 @@ export default function AuthScreen() {
     auth()
       .signInWithCredential(googleCredential)
       .then(({ user }) => setUser(user as unknown as User));
-  }
+  };
 
   const login = () => {
+    console.log("fall login");
     onGoogleButtonPress()
       .then(() => {
         navigation.navigate("Home");
@@ -35,22 +34,20 @@ export default function AuthScreen() {
       });
   };
 
-  const logout = async () => {
-    clearUser();
-    if (email) auth().signOut();
-    try {
-      if (await GoogleSignin.isSignedIn()) {
-        await GoogleSignin.revokeAccess();
-        await GoogleSignin.signOut();
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  const onAuthStateChanged = () => {
+    console.log("fall");
+    if (initializing) setInitializing(false);
   };
 
-  function onAuthStateChanged() {
-    if (initializing) setInitializing(false);
-  }
+  useEffect(() => {
+    if (email) {
+      navigation.navigate("Home");
+    } else {
+      console.log("fall cond");
+      console.log("email: ", email);
+      auth().onAuthStateChanged(onAuthStateChanged);
+    }
+  }, []);
 
   return (
     <BaseView>
@@ -62,34 +59,12 @@ export default function AuthScreen() {
       >
         <View style={styles.container}>
           {initializing && <Text>Loading...</Text>}
-          {email ? (
-            <>
-              <Text style={[fonts.h2, styles.mainText]}>
-                Você já está logado!
-              </Text>
-              <BtnPrimary
-                onPress={() => navigation.navigate("Home")}
-                text="Continuar no app"
-              />
-              <BtnSecondary onPress={logout} text="Logout" />
-            </>
-          ) : (
-            <>
-              <Text
-                style={[
-                  fonts.h1,
-                  styles.mainText
-                ]}
-              >
-                AReader
-              </Text>
-              <BtnPrimary
-                onPress={login}
-                text="Continuar com Google"
-                icon="google"
-              />
-            </>
-          )}
+          <Text style={[fonts.h1, styles.mainText]}>AReader</Text>
+          <BtnPrimary
+            onPress={login}
+            text="Continuar com Google"
+            icon="google"
+          />
         </View>
       </ImageBackground>
     </BaseView>
@@ -113,57 +88,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-
-// const res = {
-//   additionalUserInfo: {
-//     isNewUser: true,
-//     profile: {
-//       aud: "216882184573-ra5tvtb9hkef3afp65bbq6dr7ddnk0o2.apps.googleusercontent.com",
-//       azp: "216882184573-e22c6st83h8hb5b4hmt7e5qh0k4r61mn.apps.googleusercontent.com",
-//       email: "davidsou.fer@gmail.com",
-//       email_verified: true,
-//       exp: 1695567136,
-//       family_name: "Souza",
-//       given_name: "David",
-//       iat: 1695563536,
-//       iss: "https://accounts.google.com",
-//       locale: "pt-BR",
-//       name: "David Souza",
-//       picture:
-//         "https://lh3.googleusercontent.com/a/ACg8ocKmvIJZz8H6hD6D9Kul19_XtaLVCdjjeiYi8wtSWm30zrdX=s96-c",
-//       sub: "111010141002727722272",
-//     },
-//     providerId: "google.com",
-//   },
-//   user: {
-//     displayName: "David Souza",
-//     email: "davidsou.fer@gmail.com",
-//     emailVerified: true,
-//     isAnonymous: false,
-//     metadata: [Object],
-//     multiFactor: [Object],
-//     phoneNumber: null,
-//     photoURL:
-//       "https://lh3.googleusercontent.com/a/ACg8ocKmvIJZz8H6hD6D9Kul19_XtaLVCdjjeiYi8wtSWm30zrdX=s96-c",
-//     providerData: [Array],
-//     providerId: "firebase",
-//     tenantId: null,
-//     uid: "z3fLfTWiyVUrsFQoNLn3Kq6NxyW2",
-//   },
-// };
-
-// const user = {
-//   displayName: "David Souza",
-//   email: "davidsou.fer@gmail.com",
-//   emailVerified: true,
-//   isAnonymous: false,
-//   metadata: { creationTime: 1695563538394, lastSignInTime: 1695563538395 },
-//   multiFactor: { enrolledFactors: [Array] },
-//   phoneNumber: null,
-//   photoURL:
-//     "https://lh3.googleusercontent.com/a/ACg8ocKmvIJZz8H6hD6D9Kul19_XtaLVCdjjeiYi8wtSWm30zrdX=s96-c",
-//   providerData: [[Object]],
-//   providerId: "firebase",
-//   tenantId: null,
-//   uid: "z3fLfTWiyVUrsFQoNLn3Kq6NxyW2",
-// };

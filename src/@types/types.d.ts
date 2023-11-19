@@ -157,6 +157,7 @@ type NavigationProps = {
   Search: { value: string };
   Annotations: { libraryData: BookDB };
   GroupSearch: { owner: string };
+  GroupDetails: { group: Group };
   navigate(arg0: string): unknown;
 };
 

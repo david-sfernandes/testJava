@@ -13,21 +13,30 @@ type GroupCardProps = {
   onPress?: () => void;
 };
 
-export default function GroupCard({ img, members, name, author, id, onPress }: GroupCardProps) {
+export default function GroupCard({
+  img,
+  members,
+  name,
+  author,
+  id,
+  onPress,
+}: GroupCardProps) {
   const { setGroupId } = useGroupBook();
   return (
-    <TouchableOpacity style={styles.card} onPress={() => {
-      setGroupId(id);
-      onPress && onPress();
-    }}>
-      <Image
-        source={{ uri: img}}
-        style={styles.cardImg}
-      />
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => {
+        setGroupId(id);
+        onPress && onPress();
+      }}
+    >
+      <Image source={{ uri: img }} style={styles.cardImg} />
       <View style={styles.textBox}>
         <Text style={fonts.h3}>{name}</Text>
         <Text style={fonts.default}>Membros: {members}</Text>
-        <Text style={[fonts.default, {color: "#ffffffaa"}]}>Autor: {author}</Text>
+        <Text style={[fonts.default, { color: "#ffffffaa" }]}>
+          Autor: {author}
+        </Text>
       </View>
     </TouchableOpacity>
   );

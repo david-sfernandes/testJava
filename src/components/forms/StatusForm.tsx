@@ -1,8 +1,8 @@
 import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
 import useLibrary from "../../hooks/useLibrary";
-import { colors, fonts } from "../../styles/base";
+import { colors } from "../../styles/base";
 import BottomSheet from "../BottomSheet";
+import Option from "./Option";
 
 type StatusFormProps = {
   isOpen: boolean;
@@ -55,45 +55,3 @@ export default function StatusForm({
     </BottomSheet>
   );
 }
-
-function Option({
-  text,
-  color = "",
-  onPress,
-  callback,
-}: {
-  text: string;
-  color?: string;
-  onPress: () => void;
-  callback?: () => void;
-}) {
-  return (
-    <Pressable
-      style={styles.pressable}
-      onPress={() => {
-        onPress();
-        if (callback) callback();
-      }}
-    >
-      <Text style={[styles.text, color ? { color: color } : null]}>{text}</Text>
-    </Pressable>
-  );
-}
-
-const styles = StyleSheet.create({
-  pressable: {
-    width: "100%",
-    textAlign: "center",
-  },
-  text: {
-    ...fonts.default,
-    textAlign: "center",
-    color: "#2196F3",
-    fontSize: 15,
-  },
-  title: {
-    ...fonts.default,
-    textAlign: "center",
-    fontSize: 15,
-  },
-});

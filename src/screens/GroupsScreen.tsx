@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { TextInput } from "react-native-paper";
 import BaseView from "../components/BaseView";
 import BtnPrimary from "../components/BtnPrimary";
 import GroupCard from "../components/GroupCard";
+import SearchGroup from "../components/SearchGroup";
 import CreateGroupForm from "../components/forms/CreateGroupForm";
 import useGroups from "../hooks/useGroups";
 import { dimensions, fonts } from "../styles/base";
-import BtnSecondary from "../components/BtnSecondary";
 import { useNavigation } from "@react-navigation/native";
-import SearchGroup from "../components/SearchGroup";
 
 export default function GroupsScreen() {
   const [groupsMember, setGroupsMember] = useState<Group[]>([]);
   const [groupsOwner, setGroupsOwner] = useState<Group[]>([]);
   const groupsAPI = useGroups();
   const [showModal, setShowModal] = useState(false);
+  const navigation = useNavigation<NavigationProps>();
 
   useEffect(() => {
     groupsAPI
@@ -36,8 +35,6 @@ export default function GroupsScreen() {
       })
       .catch((err) => console.log("Error on get groups (Owner): ", err));
   }, [showModal]);
-
-  
 
   return (
     <>
@@ -77,6 +74,10 @@ export default function GroupsScreen() {
               members={group.members.length + 1}
               name={group.libraryBook.book.title}
               key={group.id + group.libraryBook.book.title}
+              onPress={() =>
+                // @ts-ignore
+                navigation.navigate("GroupDetailsSearch", { group: group })
+              }
             />
           ))}
           {groupsMember.length > 0 && (
@@ -85,11 +86,15 @@ export default function GroupsScreen() {
           {groupsMember.map((group) => (
             <GroupCard
               id={group.id}
-              img={group.libraryBook.book.cover}
               author={group.owner}
+              img={group.libraryBook.book.cover}
               members={group.members.length + 1}
               name={group.libraryBook.book.title}
               key={group.id + group.libraryBook.book.title}
+              onPress={() =>
+                // @ts-ignore
+                navigation.navigate("GroupDetails", { group: group })
+              }
             />
           ))}
         </View>
@@ -126,6 +131,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     height: 35,
     fontSize: 13,
-    color: "black"
+    color: "black",
   },
 });

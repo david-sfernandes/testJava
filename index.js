@@ -16,6 +16,7 @@ import LibraryScreen from "./src/screens/LibraryScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import SearchScreen from "./src/screens/SearchScreen";
 import GroupSearchScreen from "./src/screens/GroupSearchScreen";
+import GroupDetailScreen from "./src/screens/GroupDetailScreen";
 
 GoogleSignin.configure({
   webClientId:
@@ -49,6 +50,7 @@ export default function Main() {
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Library" component={LibraryScreen} />
           <Stack.Screen name="GroupSearch" component={GroupSearchScreen} />
+          <Stack.Screen name="GroupDetailsSearch" component={GroupDetailScreen} />
           <Stack.Screen name="Annotations" component={AnnotationsScreen} />
         </Stack.Navigator>
       </NavigationContainer>

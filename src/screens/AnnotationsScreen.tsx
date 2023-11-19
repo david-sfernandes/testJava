@@ -7,6 +7,7 @@ import NoteCard from "../components/NoteCard";
 import { colors, dimensions, fonts, spacing } from "../styles/base";
 import useAnnotations from "../hooks/useAnnotations";
 import ImgForm from "../components/forms/ImgForm";
+import AnnotationForm from "../components/forms/AnnotationForm";
 
 const AddNote = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -27,13 +28,14 @@ export default function AnnotationsScreen({ route }: Props) {
   const toggleModal = () => setIsOpen(!isOpen);
   const annotations = useAnnotations();
   const [annotationList, setAnnotationList] = useState<Annotation[]>([]);
+  const [currentAnnotation, setCurrentAnnotation] = useState<Annotation>();
+  const [showAnnotationForm, setShowAnnotationForm] = useState(false);
 
   useEffect(() => {
     annotations
       .getAnnotationsByIsbn(libraryData.isbn)
       .then((res) => {
         if (res.status >= 400) return;
-        console.log("Annotations: ", res);
         setAnnotationList(res);
       })
       .catch((err) => {
@@ -72,7 +74,12 @@ export default function AnnotationsScreen({ route }: Props) {
           }}
         >
           {annotationList.map((annotation) => (
-            <NoteCard key={annotation.id} annotation={annotation} />
+            <NoteCard
+              key={annotation.id}
+              annotation={annotation}
+              setAnnotation={setCurrentAnnotation}
+              setOpen={setShowAnnotationForm}
+            />
           ))}
         </View>
       </BaseView>
@@ -82,6 +89,13 @@ export default function AnnotationsScreen({ route }: Props) {
           isOpen={isOpen}
           setOpen={setIsOpen}
           libraryData={libraryData}
+        />
+      )}
+      {showAnnotationForm && currentAnnotation && (
+        <AnnotationForm
+          isOpen={showAnnotationForm}
+          setOpen={setShowAnnotationForm}
+          annotation={currentAnnotation}
         />
       )}
     </>
