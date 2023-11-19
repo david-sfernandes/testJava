@@ -1,11 +1,11 @@
 import React from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { colors, dimensions, spacing } from "../styles/base";
 import { useNavigation } from "@react-navigation/native";
 
 export default function SearchBar() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
 
   return (
     <View style={styles.container}>
@@ -16,11 +16,14 @@ export default function SearchBar() {
           style={styles.input}
           onSubmitEditing={({ nativeEvent }) => {
             // @ts-ignore: suppress param type
-            navigation.navigate("Search", { value: nativeEvent.text });
+            navigation.navigate("Search", { value: nativeEvent.text, isISBN: false });
           }}
         />
       </View>
-      <Icon name="barcode" size={20} color="white" style={styles.barcode} />
+      {/* <Icon name="barcode" size={20} color="white" style={styles.barcode} /> */}
+      <TouchableOpacity onPress={() => navigation.navigate("Scanner")} style={styles.barcode}>
+        <Icon name="barcode" size={25} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -50,6 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: spacing.xs,
     paddingVertical: 6,
+    color: colors.black,
   },
   barcode: {
     marginLeft: spacing.sm,

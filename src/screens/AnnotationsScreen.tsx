@@ -8,6 +8,7 @@ import { colors, dimensions, fonts, spacing } from "../styles/base";
 import useAnnotations from "../hooks/useAnnotations";
 import ImgForm from "../components/forms/ImgForm";
 import AnnotationForm from "../components/forms/AnnotationForm";
+import GoBack from "../components/GoBack";
 
 const AddNote = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -43,9 +44,12 @@ export default function AnnotationsScreen({ route }: Props) {
       });
   }, [isOpen]);
 
+  const img = libraryData.book.cover ? { uri: libraryData.book.cover } : null;
+
   return (
     <>
-      <BaseView img={{ uri: libraryData.book.cover }}>
+      <BaseView img={img}>
+        <GoBack />
         <View style={styles.main}>
           <Text style={fonts.h1}>{libraryData.book.title}</Text>
           <Text style={[fonts.h3, styles.author]}>

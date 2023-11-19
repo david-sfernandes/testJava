@@ -70,6 +70,7 @@ export default function ImgForm({
   const sendData = async () => {
     if (!image) return;
     setLoading(true);
+    console.log("Image: ", image);
 
     annotations
       .addAnnotation(text, libraryData.id, image)
@@ -79,7 +80,11 @@ export default function ImgForm({
         setLoading(false);
 
         setShowNotification(true);
-        setOpen(false);
+        if (res.status >= 400) {
+          alert("Desculpe imagem invalida. Tente usar outra!");
+        } else {
+          setOpen(false);
+        }
       })
       .catch((err) => {
         console.log("Err: ", err);

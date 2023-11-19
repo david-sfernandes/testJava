@@ -8,7 +8,7 @@ export default function GoBack() {
   const navigation = useNavigation();
 
   return (
-    <Pressable onPress={() => navigation.goBack()}>
+    <Pressable onPress={() => navigation.goBack()} style={styles.btn}>
       <Icon
         name="chevron-left"
         solid
@@ -22,13 +22,13 @@ export default function GoBack() {
 
 const styles = StyleSheet.create({
   goBack: {
-    top: 45,
-    position: "absolute",
-    left: spacing.lg - 6,
-    padding: 4,
-    paddingHorizontal: 6,
-    zIndex: 30,
-    borderWidth: 1,
-    borderColor: "transparent",
   },
+  btn: {
+    top: 80,
+    padding: 4,
+    paddingHorizontal: 20,
+    zIndex: 50,
+    position: "absolute",
+    left: spacing.lg - 20,
+  }
 });

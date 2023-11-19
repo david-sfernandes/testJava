@@ -9,13 +9,21 @@ type Props = NativeStackScreenProps<NavigationProps, "Search">;
 
 export default function SearchScreen({ route }: Props) {
   const [bookList, setBookList] = useState<Book[]>([]);
+  const [isISBN, setIsISBN] = useState(route.params.isISBN);
   const books = useBooks();
 
   useEffect(() => {
-    fetch(books.search(route.params.value))
-      .then((res) => res.json())
-      .then((res: ApiResponse) => setBookList(res.items))
-      .catch((err) => console.error(err));
+    if (isISBN) {
+      fetch(books.searchByISBN(route.params.value))
+        .then((res) => res.json())
+        .then((res: ApiResponse) => setBookList(res.items))
+        .catch((err) => console.error(err));
+    } else {
+      fetch(books.search(route.params.value))
+        .then((res) => res.json())
+        .then((res: ApiResponse) => setBookList(res.items))
+        .catch((err) => console.error(err));
+    }
   }, []);
 
   return (

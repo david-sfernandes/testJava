@@ -23,8 +23,11 @@ const options = {
 };
 
 export default function BookScreen({ route }: Props) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
   const { book } = route.params;
+  const img = book.volumeInfo.imageLinks?.thumbnail
+    ? { uri: book.volumeInfo.imageLinks.thumbnail }
+    : null;
   const isbn =
     book.volumeInfo.industryIdentifiers.find(
       (identifier) => identifier.type === "ISBN_13"
@@ -34,7 +37,8 @@ export default function BookScreen({ route }: Props) {
   const [isOnLibrary, setIsOnLibrary] = useState(false);
   const [libraryData, setLibraryData] = useState<BookDB>();
   const [annotationList, setAnnotationList] = useState<ARAnnotation[]>([]);
-  
+  const [isAddLoading, setIsAddLoading] = useState(false);
+
   const library = useLibrary();
   const annotations = useAnnotations();
 
@@ -70,9 +74,17 @@ export default function BookScreen({ route }: Props) {
       });
   }, []);
 
+  const handleAddBook = () => {
+    setIsAddLoading(true);
+    library.addBook(isbn).then(() => {
+      // @ts-ignore: suppress param type
+      navigation.navigate("Book", { book });
+    });
+  };
+
   return (
     <>
-      <BaseView img={{ uri: book.volumeInfo.imageLinks?.thumbnail }}>
+      <BaseView img={img}>
         <GoBack />
         <View style={styles.main}>
           <View style={styles.container}>
@@ -81,7 +93,9 @@ export default function BookScreen({ route }: Props) {
                 style={styles.status}
                 onPress={() => setShowModal(true)}
               >
-                <Text style={{fontSize: 12}}>{options[libraryData.status]}</Text>
+                <Text style={{ fontSize: 12 }}>
+                  {options[libraryData.status]}
+                </Text>
               </Pressable>
             )}
             <BookMainInfo book={book} />
@@ -110,11 +124,10 @@ export default function BookScreen({ route }: Props) {
             ) : (
               <BtnPrimary
                 flex
-                text="Adicionar"
+                disabled={isAddLoading}
+                text={isAddLoading ? "Adicionando..." : "Adicionar"}
                 icon="plus"
-                onPress={() =>
-                  library.addBook(isbn).then(() => setIsOnLibrary(true))
-                }
+                onPress={handleAddBook}
               />
             )}
           </View>

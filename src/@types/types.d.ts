@@ -154,7 +154,7 @@ type NavigationProps = {
   Profile: undefined;
   Book: { book: Book };
   PictureForm: undefined;
-  Search: { value: string };
+  Search: { value: string, isISBN: boolean };
   Annotations: { libraryData: BookDB };
   GroupSearch: { owner: string };
   GroupDetails: { group: Group };

@@ -18,7 +18,7 @@ const useAnnotations = () => {
     formData.append("file", {
       uri: image.uri,
       name: image.uri,
-      type: image.exif?.MediaType,
+      type: "image/jpeg",
     });
     formData.append("text", annotation);
     formData.append("libraryBookId", bookId.toString());

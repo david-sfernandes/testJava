@@ -36,6 +36,7 @@ export default function CameraLaucher({
 
   if (!permission.granted) {
     console.log("permission not granted");
+    Camera.requestCameraPermissionsAsync();
     return null;
   }
 
@@ -86,6 +87,7 @@ const BTN_SIZE = 80;
 const styles = StyleSheet.create({
   container: {
     bottom: 0,
+    zIndex: 100,
     display: "flex",
     position: "absolute",
     justifyContent: "center",
