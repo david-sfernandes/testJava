@@ -24,7 +24,7 @@ export default function SearchScreen({ route }: Props) {
         .then((res: ApiResponse) => setBookList(res.items))
         .catch((err) => console.error(err));
     }
-  }, []);
+  }, [route.params]);
 
   return (
     <BaseView activeNav>

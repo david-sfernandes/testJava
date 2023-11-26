@@ -1,62 +1,91 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import BaseView from "../components/BaseView";
 import BtnPrimary from "../components/BtnPrimary";
 import BtnSecondary from "../components/BtnSecondary";
+import MembersList from "../components/MembersList";
 import NoteCard from "../components/NoteCard";
-import { colors, fonts, spacing } from "../styles/base";
+import useGroups from "../hooks/useGroups";
+import {
+  bookContainer,
+  bookImage,
+  bookTitle,
+  colors,
+  dimensions,
+  fonts,
+  spacing,
+} from "../styles/base";
 
 type Props = NativeStackScreenProps<NavigationProps, "GroupDetails">;
 
 export default function GroupDetailScreen({ route }: Props) {
   const { group } = route.params;
-
-  // print annotations length
-  console.log(group.annotations.length);
+  const [showMembers, setShowMembers] = useState(false);
+  const groups = useGroups();
 
   return (
     <>
       <BaseView>
         <View style={styles.main}>
-          {/* group info */}
           <View style={styles.headerContainer}>
-            <Image
-              source={{ uri: group.libraryBook.book.cover }}
-              style={styles.img}
-            />
-            <View>
-              <Text style={fonts.h1}>{group.libraryBook.book.title}</Text>
+            <View style={[bookContainer, { width: 70, height: 100 }]}>
+              {group.libraryBook.book.cover ? (
+                <Image
+                  source={{ uri: group.libraryBook.book.cover }}
+                  style={bookImage}
+                />
+              ) : (
+                <Text style={bookTitle}>{group.libraryBook.book.title}</Text>
+              )}
+            </View>
+            <View style={styles.textBox}>
+              <Text style={fonts.h1} numberOfLines={2} ellipsizeMode="tail">
+                {group.libraryBook.book.title}
+              </Text>
               <Text style={fonts.h3}>Membros: {group.members.length + 1}</Text>
               <Text style={fonts.default}>Criador: {group.owner}</Text>
             </View>
           </View>
           <View style={styles.btnBox}>
-            {/* group members */}
             <BtnPrimary
               flex
-              onPress={() => {}}
+              onPress={() => setShowMembers(true)}
               text="Membros"
               icon="account-multiple"
             />
-            {/* leave group button */}
-            <BtnSecondary flex onPress={() => {}} text="Sair" icon="door-open" />
+            <BtnSecondary
+              flex
+              text="Sair"
+              icon="door-open"
+              onPress={() => groups.leave(group.id)}
+            />
           </View>
-          {/* annotations list */}
           <Text style={[fonts.h4, styles.sectionTitle]}>Anotações</Text>
-          <View style={{marginHorizontal: -spacing.md}}>
+          <View style={{ marginHorizontal: -spacing.md }}>
             {group.annotations.map((annotation) => (
               <View key={annotation.id}>
                 <Text style={[fonts.default, styles.annotationCreator]}>
                   {annotation.userEmail}
                 </Text>
-                <NoteCard annotation={annotation} key={annotation.id} setAnnotation={()=>{}} setOpen={()=>{}}/>
+                <NoteCard
+                  annotation={annotation}
+                  key={annotation.id}
+                  setAnnotation={() => {}}
+                  setOpen={() => {}}
+                />
               </View>
             ))}
           </View>
         </View>
       </BaseView>
-      
+      {showMembers && (
+        <MembersList
+          isOpen={showMembers}
+          setOpen={setShowMembers}
+          members={group.members}
+        />
+      )}
     </>
   );
 }
@@ -67,7 +96,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 16,
-    gap: 16
+    gap: 16,
   },
   sectionTitle: {
     fontSize: 18,
@@ -104,5 +133,8 @@ const styles = StyleSheet.create({
   main: {
     marginTop: 30,
     paddingHorizontal: spacing.md,
+  },
+  textBox: {
+    width: dimensions.fullWidth - 70 - 16 - 50,
   },
 });

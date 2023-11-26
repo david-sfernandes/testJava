@@ -20,7 +20,6 @@ export default function SearchBar() {
           }}
         />
       </View>
-      {/* <Icon name="barcode" size={20} color="white" style={styles.barcode} /> */}
       <TouchableOpacity onPress={() => navigation.navigate("Scanner")} style={styles.barcode}>
         <Icon name="barcode" size={25} color="white" />
       </TouchableOpacity>

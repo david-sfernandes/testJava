@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -29,7 +29,7 @@ export default function BookScreen({ route }: Props) {
     ? { uri: book.volumeInfo.imageLinks.thumbnail }
     : null;
   const isbn =
-    book.volumeInfo.industryIdentifiers.find(
+    book.volumeInfo?.industryIdentifiers?.find(
       (identifier) => identifier.type === "ISBN_13"
     )?.identifier || book.volumeInfo.industryIdentifiers[0].identifier;
 
@@ -38,6 +38,7 @@ export default function BookScreen({ route }: Props) {
   const [libraryData, setLibraryData] = useState<BookDB>();
   const [annotationList, setAnnotationList] = useState<ARAnnotation[]>([]);
   const [isAddLoading, setIsAddLoading] = useState(false);
+  const isFocused = useIsFocused();
 
   const library = useLibrary();
   const annotations = useAnnotations();
@@ -52,6 +53,19 @@ export default function BookScreen({ route }: Props) {
       })
       .catch((err) => {
         console.log("Error on check library: ", err);
+      });
+  };
+
+  const handleAddBook = () => {
+    setIsAddLoading(true);
+    library
+      .addBook(isbn)
+      .then(() => {
+        // @ts-ignore: suppress param type
+        navigation.navigate("Book", { book });
+      })
+      .catch((err) => {
+        console.log("Error on add book: ", err);
       });
   };
 
@@ -72,15 +86,7 @@ export default function BookScreen({ route }: Props) {
       .catch((err) => {
         console.log("Error on get annotations: ", err);
       });
-  }, []);
-
-  const handleAddBook = () => {
-    setIsAddLoading(true);
-    library.addBook(isbn).then(() => {
-      // @ts-ignore: suppress param type
-      navigation.navigate("Book", { book });
-    });
-  };
+  }, [isFocused, route.params]);
 
   return (
     <>
@@ -88,7 +94,7 @@ export default function BookScreen({ route }: Props) {
         <GoBack />
         <View style={styles.main}>
           <View style={styles.container}>
-            {libraryData && (
+            {(libraryData && libraryData.status) && (
               <Pressable
                 style={styles.status}
                 onPress={() => setShowModal(true)}

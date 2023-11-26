@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { fonts, spacing } from "../styles/base";
 import Book from "./Book";
+import { useNavigation } from "@react-navigation/native";
 
 export default function BookSlider({
   listUrl,
@@ -13,6 +14,7 @@ export default function BookSlider({
   mockBooks?: Book[];
 }) {
   const [books, setBooks] = useState<Book[]>(mockBooks);
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (mockBooks.length == 0) {
@@ -31,7 +33,14 @@ export default function BookSlider({
       <ScrollView horizontal style={styles.slider}>
         <View style={{ width: 10 }} />
         {books.map((book) => (
-          <Book book={book} key={book.id} />
+          <Book
+            book={book}
+            key={book.id}
+            onPress={() => {
+              // @ts-ignore: suppress param type
+              navigation.navigate("Book", { book });
+            }}
+          />
         ))}
       </ScrollView>
     </View>

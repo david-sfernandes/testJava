@@ -1,38 +1,41 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Image, Pressable, StyleSheet } from "react-native";
+import { Image, StyleSheet, Text } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { bookContainer, bookImage, colors, fonts } from "../styles/base";
 
-export default function Book({ book }: { book: Book }) {
-  const navigation = useNavigation();
+type BookProps = {
+  book: Book;
+  width?: number;
+  onPress: () => void;
+};
+
+export default function Book({ book, onPress, width = 100 }: BookProps) {
   const image = book.volumeInfo.imageLinks?.thumbnail
     ? { uri: book.volumeInfo.imageLinks?.thumbnail }
-    : require("../assets/placeholder.png");
+    : null;
+
+  const customStyle = {
+    width: width,
+    height: width * 1.5,
+  };
 
   return (
-    <Pressable
-      onPress={() => {
-        // @ts-ignore: suppress param type
-        navigation.navigate("Book", { book });
-      }}
-      style={styles.bookContainer}
-    >
-      <Image source={image} style={styles.image} />
-    </Pressable>
+    <TouchableOpacity onPress={onPress} style={[bookContainer, customStyle]}>
+      {image ? (
+        <Image source={image} style={bookImage} />
+      ) : (
+        <Text style={styles.title}>{book.volumeInfo.title}</Text>
+      )}
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  bookContainer: {
-    width: 100,
-    height: 150,
-    borderRadius: 8,
-    elevation: 3,
-    backgroundColor: "white",
-    marginHorizontal: 5,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 8,
+  title: {
+    ...fonts.default,
+    width: "90%",
+    margin: "auto",
+    color: "#00000077",
+    textAlign: "center",
   },
 });

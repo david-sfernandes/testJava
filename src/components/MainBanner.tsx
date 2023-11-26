@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 import { useUserStore } from "../store/userStore";
 import { colors, dimensions, fonts, sizing, spacing } from "../styles/base";
+import useLibrary from "../hooks/useLibrary";
 
 export default function MainBanner() {
   const { displayName } = useUserStore();
+  const library = useLibrary();
+
+  const [read, setRead] = useState(0);
+  const [reading, setReading] = useState(0);
+  const [wantToRead, setWantToRead] = useState(0);
+
+  useEffect(() => {
+    library.getBooks().then((books) => {
+      setRead(books.filter((book) => book.status === "READED").length);
+      setReading(books.filter((book) => book.status === "READING").length);
+      setWantToRead(
+        books.filter((book) => book.status === "WANT_TO_READ").length
+      );
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -34,9 +50,9 @@ export default function MainBanner() {
               Olá, {displayName.split(" ")[0]}
             </Text>
             <View style={styles.statBox}>
-              <Stat title="Lidos" value="134" />
-              <Stat title="Lendo" value="1" />
-              <Stat title="Quero ler" value="47" />
+              <Stat title="Lidos" value={read.toString()} />
+              <Stat title="Lendo" value={reading.toString()} />
+              <Stat title="Quero ler" value={wantToRead.toString()} />
             </View>
           </View>
         </Shadow>

@@ -108,6 +108,8 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
       messageSnackBarHelper.showError(this, "Nenhuma anotação encontrada para esse livro!");
     
     installRequested = false;
+    // Prevent camera blurry at start of app due to render before onResume called.
+    this.onResume();
   }
   
   @Override
@@ -126,6 +128,9 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
   
   @Override
   protected void onResume() {
+    // Prevente onResume from being called without onPause being called first.
+    this.onPause();
+
     super.onResume();
     if (session == null) {
       Exception exception = null;
@@ -300,7 +305,10 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
   
   private void configureSession() throws IOException {
     Config config = new Config(session);
-    config.setFocusMode(Config.FocusMode.AUTO);
+    if (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC) == true) {
+      config.setDepthMode(Config.DepthMode.AUTOMATIC);
+    }
+    config.setFocusMode(Config.FocusMode.FIXED);
     if (!setupAugmentedImageDatabase(config, annotations)) {
       messageSnackBarHelper.showError(this, "Could not setup augmented image database");
     }
@@ -312,32 +320,20 @@ public class ARActivity extends AppCompatActivity implements GLSurfaceView.Rende
     
     // Iterate to update augmentedImageMap, remove elements we cannot draw.
     for (AugmentedImage augmentedImage : updatedAugmentedImages) {
-      switch (augmentedImage.getTrackingState()) {
-        case PAUSED:
-          // When an image is in PAUSED state, but the camera is not PAUSED, it has been
-          // detected,
-          // but not yet tracked.
-          String text = String.format(Locale.getDefault(), "Detected Image %d", augmentedImage.getIndex());
-          messageSnackBarHelper.showMessage(this, text);
-          break;
-        
-        case TRACKING:
+      switch (augmentedImage.getTrackingMethod()) {
+        case FULL_TRACKING:
           // Have to switch to UI Thread to update View.
           this.runOnUiThread(() -> fitToScanView.setVisibility(View.GONE));
-          
+    
           // Create a new anchor for newly found images.
           if (!augmentedImageMap.containsKey(augmentedImage.getIndex())) {
             Anchor centerPoseAnchor = augmentedImage.createAnchor(augmentedImage.getCenterPose());
             augmentedImageMap.put(augmentedImage.getIndex(), Pair.create(augmentedImage, centerPoseAnchor));
-            text = String.format(Locale.getDefault(), "Tracking Image %d", augmentedImage.getIndex());
-            messageSnackBarHelper.showMessage(this, text);
           }
           break;
         
-        case STOPPED:
+        case LAST_KNOWN_POSE:
           augmentedImageMap.remove(augmentedImage.getIndex());
-          text = String.format(Locale.getDefault(), "Stop Tracking Image %d", augmentedImage.getIndex());
-          messageSnackBarHelper.showMessage(this, text);
           break;
         
         default:

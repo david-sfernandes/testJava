@@ -1,20 +1,20 @@
-import React, { useState } from "react";
 import {
   Camera,
   CameraCapturedPicture,
   CameraType,
   FlashMode,
 } from "expo-camera";
+import React, { useState } from "react";
 import {
   Pressable,
   StatusBar,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Text } from "react-native";
-import { dimensions } from "../styles/base";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { dimensions } from "../styles/base";
 
 type CameraLaucherProps = {
   setImage: (img: CameraCapturedPicture) => void;
@@ -53,31 +53,27 @@ export default function CameraLaucher({
       <Camera
         style={styles.camera}
         type={CameraType.back}
-        ratio="16:9"
+        ratio="4:3"
         ref={camera}
         flashMode={useFlash ? FlashMode.on : FlashMode.off}
-      >
-        <View style={styles.controlView}>
-          <Pressable onPress={() => setShowCamera(false)} style={styles.icon}>
-            <Icon name="chevron-left" solid size={35} color="white" />
-          </Pressable>
-          <TouchableOpacity style={styles.button} onPress={takePicture}>
-            <View style={styles.circle} />
-          </TouchableOpacity>
-          <Pressable
-            onPress={() => setUseFlash(!useFlash)}
-            style={styles.flash}
-          >
-            <Icon
-              name="bolt"
-              solid
-              size={35}
-              color={useFlash ? "white" : "#ffffff88"}
-            />
-            <Text style={styles.fleshText}>{useFlash ? "On" : "Off"}</Text>
-          </Pressable>
-        </View>
-      </Camera>
+      />
+      <View style={styles.controlView}>
+        <Pressable onPress={() => setShowCamera(false)} style={styles.icon}>
+          <Icon name="chevron-left" solid size={35} color="white" />
+        </Pressable>
+        <TouchableOpacity style={styles.button} onPress={takePicture}>
+          <View style={styles.circle} />
+        </TouchableOpacity>
+        <Pressable onPress={() => setUseFlash(!useFlash)} style={styles.flash}>
+          <Icon
+            name="bolt"
+            solid
+            size={35}
+            color={useFlash ? "white" : "#ffffff88"}
+          />
+          <Text style={styles.fleshText}>{useFlash ? "On" : "Off"}</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -97,29 +93,34 @@ const styles = StyleSheet.create({
   },
   camera: {
     width: "100%",
-    height: (dimensions.fullWidth * 16) / 9,
+    height: (dimensions.fullWidth * 4) / 3,
   },
   controlView: {
     flex: 1,
-    margin: 20,
+    height: "95%",
+    width: "100%",
     flexDirection: "row",
+    position: "absolute",
     justifyContent: "center",
   },
   button: {
+    bottom: 13,
+    margin: "auto",
     width: BTN_SIZE,
     height: BTN_SIZE,
     borderRadius: BTN_SIZE,
+    position: "absolute",
     alignItems: "center",
     alignSelf: "flex-end",
     justifyContent: "center",
     backgroundColor: "white",
   },
   circle: {
+    borderWidth: 5,
+    alignSelf: "center",
     width: BTN_SIZE - 10,
     height: BTN_SIZE - 10,
     borderRadius: BTN_SIZE - 10,
-    borderWidth: 5,
-    alignSelf: "center",
     borderColor: "#00000050",
   },
   text: {

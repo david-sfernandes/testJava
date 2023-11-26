@@ -20,7 +20,8 @@ export default function AuthScreen() {
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
     auth()
       .signInWithCredential(googleCredential)
-      .then(({ user }) => setUser(user as unknown as User));
+      .then(({ user }) => setUser(user as unknown as User))
+      .catch((err) => console.log("Error: ", err));
   };
 
   const login = () => {

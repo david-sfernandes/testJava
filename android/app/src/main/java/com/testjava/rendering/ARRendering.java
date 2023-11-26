@@ -35,7 +35,7 @@ public class ARRendering {
       float[] projectionMatrix,
       Anchor centerAnchor,
       String annotation) throws Exception {
-    Pose localBoundaryPose = Pose.makeTranslation(0.0f, 0.0f, 0.0f);
+    Pose localBoundaryPose = Pose.makeTranslation(0.1f, 0.0f, 0.01f);
     Pose anchorPose = centerAnchor.getPose();
     Pose worldBoundaryPose = anchorPose.compose(localBoundaryPose);
     float scaleFactor = 0.08f;

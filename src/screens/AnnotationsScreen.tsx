@@ -1,14 +1,15 @@
+import { useIsFocused } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import BaseView from "../components/BaseView";
-import NoteCard from "../components/NoteCard";
-import { colors, dimensions, fonts, spacing } from "../styles/base";
-import useAnnotations from "../hooks/useAnnotations";
-import ImgForm from "../components/forms/ImgForm";
-import AnnotationForm from "../components/forms/AnnotationForm";
 import GoBack from "../components/GoBack";
+import NoteCard from "../components/NoteCard";
+import AnnotationForm from "../components/forms/AnnotationForm";
+import ImgForm from "../components/forms/ImgForm";
+import useAnnotations from "../hooks/useAnnotations";
+import { colors, fonts, spacing } from "../styles/base";
 
 const AddNote = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -31,6 +32,8 @@ export default function AnnotationsScreen({ route }: Props) {
   const [annotationList, setAnnotationList] = useState<Annotation[]>([]);
   const [currentAnnotation, setCurrentAnnotation] = useState<Annotation>();
   const [showAnnotationForm, setShowAnnotationForm] = useState(false);
+  const isFocused = useIsFocused();
+  const img = libraryData.book.cover ? { uri: libraryData.book.cover } : null;
 
   useEffect(() => {
     annotations
@@ -42,9 +45,7 @@ export default function AnnotationsScreen({ route }: Props) {
       .catch((err) => {
         console.log("Error on get annotations: ", err);
       });
-  }, [isOpen]);
-
-  const img = libraryData.book.cover ? { uri: libraryData.book.cover } : null;
+  }, [isOpen, isFocused]);
 
   return (
     <>
@@ -71,10 +72,9 @@ export default function AnnotationsScreen({ route }: Props) {
         </View>
         <View
           style={{
-            marginBottom: 50,
             width: "100%",
             height: "100%",
-            minHeight: dimensions.fullHeight,
+            minHeight: 100,
           }}
         >
           {annotationList.map((annotation) => (

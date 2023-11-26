@@ -19,7 +19,17 @@ const useGroups = () => {
 
   const removeAnnotation = async () => {};
 
-  const leave = async () => {};
+  const leave = async (idGroup: number) => {
+    const options = {
+      method: "PATCH",
+      headers: baseHeaders(),
+    };
+    const res = await fetch(
+      `${url}/leave?idGroup=${idGroup}&userEmail=${email}`,
+      options
+    ).then((res) => res.json());
+    return res;
+  };
 
   const join = async (idGroup: number, password: string) => {
     const options = {

@@ -1,4 +1,11 @@
-import { Dimensions, StyleSheet } from "react-native";
+import {
+  Dimensions,
+  ImageStyle,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 
 export const dimensions = {
   fullHeight: Dimensions.get("window").height,
@@ -75,3 +82,27 @@ export const fonts = StyleSheet.create({
     textShadowRadius: 10,
   },
 });
+
+export const bookImage: StyleProp<ImageStyle> = {
+  width: "102%",
+  height: "102%",
+  borderRadius: 8,
+};
+
+export const bookContainer: StyleProp<ViewStyle> = {
+  elevation: 3,
+  borderRadius: 8,
+  marginHorizontal: 5,
+  backgroundColor: "white",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+};
+
+export const bookTitle: StyleProp<TextStyle> = {
+  ...fonts.default,
+  width: "90%",
+  margin: "auto",
+  color: "#00000077",
+  textAlign: "center",
+};

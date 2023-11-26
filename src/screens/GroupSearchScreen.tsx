@@ -9,6 +9,7 @@ import EnterGroupForm from "../components/forms/EnterGroupForm";
 import useGroups from "../hooks/useGroups";
 import { dimensions, fonts } from "../styles/base";
 import SearchGroup from "../components/SearchGroup";
+import { useIsFocused } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<NavigationProps, "GroupSearch">;
 
@@ -17,6 +18,7 @@ export default function GroupSearchScreen({ route }: Props) {
   const [groupsOwner, setGroupsOwner] = useState<Group[]>([]);
   const groupsAPI = useGroups();
   const [showModal, setShowModal] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     groupsAPI
@@ -26,7 +28,7 @@ export default function GroupSearchScreen({ route }: Props) {
         setGroupsOwner(res);
       })
       .catch((err) => console.log("Error on get groups (Owner): ", err));
-  }, [showModal]);
+  }, [showModal, isFocused]);
 
   return (
     <>

@@ -2,7 +2,6 @@ import { CameraCapturedPicture } from "expo-camera";
 import { useUserStore } from "../store/userStore";
 import baseHeaders from "../config/headers";
 
-
 const useAnnotations = () => {
   const baseUrl = "https://areader-spring-zkmzgms3ea-rj.a.run.app/annotation";
   const { email } = useUserStore();
@@ -49,17 +48,13 @@ const useAnnotations = () => {
   };
 
   const deleteAnnotation = async (id: number) => {
-    const response = await fetch(`${baseUrl}/remove`, {
+    const response = await fetch(`${baseUrl}/remove?id=${id}`, {
       method: "DELETE",
-      headers: {
-        ...baseHeaders(),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: id }),
+      headers: baseHeaders()
     });
     return await response.json();
   };
-  
+
   return {
     addAnnotation,
     getAnnotations,

@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, TextInput, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Image, StyleSheet, Text, TextInput } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import useGroups from "../../hooks/useGroups";
 import useLibrary from "../../hooks/useLibrary";
 import { useGroupBook } from "../../store/groupBook";
-import { colors, fonts } from "../../styles/base";
+import {
+  bookContainer,
+  bookImage,
+  bookTitle,
+  colors,
+  fonts,
+} from "../../styles/base";
 import BottomSheet from "../BottomSheet";
 import BtnPrimary from "../BtnPrimary";
 import Notification from "../Notification";
@@ -98,52 +104,41 @@ export default function CreateGroupForm({
 
 function BookList({ books }: { books: BookDB[] }) {
   return (
-    <View style={styles.bookList}>
+    <ScrollView horizontal style={styles.bookList}>
       {books.map((book) => (
         <Book data={book} key={book.id} />
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
 function Book({ data }: { data: BookDB }) {
   const { bookId, setBookId } = useGroupBook();
-  const image = data.book.cover
-    ? { uri: data.book.cover }
-    : require("../../assets/placeholder.png");
+  const image = data.book.cover ? { uri: data.book.cover } : null;
   const selectedStyle =
     bookId == data.id ? { borderColor: "#ffffffbb", borderWidth: 3 } : {};
 
   return (
     <TouchableOpacity
       onPress={() => setBookId(data.id)}
-      style={[styles.bookContainer, selectedStyle]}
+      style={[bookContainer, selectedStyle, { width: 70, height: 100 }]}
     >
-      <Image source={image} style={styles.image} />
+      {image ? (
+        <Image source={image} style={bookImage} />
+      ) : (
+        <Text style={[bookTitle, { fontSize: 10 }]}>{data.book.title}</Text>
+      )}
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  bookContainer: {
-    width: 70,
-    height: 100,
-    borderRadius: 8,
-    elevation: 3,
-    backgroundColor: "white",
-    marginHorizontal: 5,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 8,
-  },
   bookList: {
-    rowGap: 8,
-    display: "flex",
-    flexWrap: "wrap",
-    paddingBottom: 17,
-    flexDirection: "row",
+    gap: 8,
+    paddingBottom: 0,
+    marginBottom: 0,
+    height: 100,
+    maxHeight: 112,
   },
   input: {
     marginBottom: 10,

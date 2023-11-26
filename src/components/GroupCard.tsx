@@ -1,7 +1,8 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { colors, fonts } from "../styles/base";
+import { bookTitle, colors, dimensions, fonts } from "../styles/base";
 import { useGroupBook } from "../store/groupBook";
+import { bookContainer, bookImage } from "../styles/base";
 
 type GroupCardProps = {
   id: number;
@@ -30,9 +31,17 @@ export default function GroupCard({
         onPress && onPress();
       }}
     >
-      <Image source={{ uri: img }} style={styles.cardImg} />
+      <View style={[bookContainer, { width: 70, height: 100 }]}>
+        {img ? (
+          <Image source={{ uri: img }} style={bookImage} />
+        ) : (
+          <Text style={bookTitle}>{name}</Text>
+        )}
+      </View>
       <View style={styles.textBox}>
-        <Text style={fonts.h3}>{name}</Text>
+        <Text style={fonts.h3} numberOfLines={1} ellipsizeMode="tail">
+          {name}
+        </Text>
         <Text style={fonts.default}>Membros: {members}</Text>
         <Text style={[fonts.default, { color: "#ffffffaa" }]}>
           Autor: {author}
@@ -63,5 +72,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     marginLeft: 10,
+    overflow: "hidden",
+    width: dimensions.fullWidth - 70 - 16 - 50,
   },
 });

@@ -116,7 +116,11 @@ export default function AnnotationForm({
           <Option
             text="Excluir"
             color={colors.red}
-            onPress={() => annotations.deleteAnnotation(annotation.id)}
+            onPress={() =>
+              annotations
+                .deleteAnnotation(annotation.id)
+                .then((r) => console.log(r))
+                .catch((err) => console.error("Erro ao excluir anotação: ", err))}
           />
         </>
       )}
